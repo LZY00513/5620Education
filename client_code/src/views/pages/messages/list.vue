@@ -57,12 +57,12 @@
 			</el-form>
 			<template #footer>
 				<span class="formModel_btn_box">
-					<el-button class="formModel_cancel" @click="formVisible=false">关闭</el-button>
-					<el-button class="formModel_confirm" type="primary" @click="save">发表</el-button>
+					<el-button class="formModel_cancel" @click="formVisible=false">Close</el-button>
+					<el-button class="formModel_confirm" type="primary" @click="save">Post</el-button>
 				</span>
-			</template>
-		</el-dialog>
-	</div>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup>
@@ -234,6 +234,7 @@
 	}
 	init()
 </script>
+
 
 <style lang="scss" scoped>
 	// 返回盒子

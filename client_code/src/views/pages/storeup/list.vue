@@ -1,160 +1,161 @@
 <template>
-	<div class="list-page" :style='{}'>
-		<div class="back_view" v-if="centerType">
-			<el-button class="back_btn" @click="backClick" type="primary">返回</el-button>
-		</div>
-		<div class="section_title">
-            <span>{{formName}}</span>
-		</div>
-		<el-form :inline="true" :model="searchQuery" class="list_search">
-			<div class="search_view">
-				<div class="search_label">
-					名称：
-				</div>
-				<div class="search_box">
-					<el-input class="search_inp" v-model="searchQuery.name" placeholder="名称" style="100%"
-						size="small" clearable>
-					</el-input>
-				</div>
-			</div>
-			<div class="search_btn_view">
-				<el-button class="search_btn" type="primary" @click="searchClick">搜索</el-button>
-			</div>
-		</el-form>
-		<div class="page_list">
-			<div class="data_box">
-				<div class="data_view">
-					<div class="data_item" v-for="(item,index) in list" :key="index" @click.stop="detailClick(item)">
-						<div class="data_img_box" v-if="item.picture && item.picture.substr(0,4)=='http'">
-							<el-image class="data_img" :src="item.picture" fit="cover"></el-image>
-						</div>
-						<div class="data_img_box" v-else>
-							<el-image class="data_img" :src="item.picture?$config.url + item.picture.split(',')[0]:''"
-								fit="cover"></el-image>
-						</div>
-						<div class="data_content">
-							<div class="data_title1">{{item.name}}</div>
-						</div>
-					</div>
-				</div>
-				<el-pagination
-					background 
-					:layout="layouts.join(',')"
-					:total="total" 
-					:page-size="listQuery.limit"
-					prev-text="上一页"
-					next-text="下一页"
-					:hide-on-single-page="false"
-					:style='{}'
-					@size-change="sizeChange"
-					@current-change="currentChange" 
-					@prev-click="prevClick"
-					@next-click="nextClick"  />
-			</div>
-		</div>
-	</div>
+  <div class="list-page" :style='{}'>
+    <div class="back_view" v-if="centerType">
+      <el-button class="back_btn" @click="backClick" type="primary">Return</el-button>
+    </div>
+    <div class="section_title">
+      <span>{{formName}}</span>
+    </div>
+    <el-form :inline="true" :model="searchQuery" class="list_search">
+      <div class="search_view">
+        <div class="search_label">
+          Name:
+        </div>
+        <div class="search_box">
+          <el-input class="search_inp" v-model="searchQuery.name" placeholder="Name" style="100%"
+                    size="small" clearable>
+          </el-input>
+        </div>
+      </div>
+      <div class="search_btn_view">
+        <el-button class="search_btn" type="primary" @click="searchClick">Search</el-button>
+      </div>
+    </el-form>
+    <div class="page_list">
+      <div class="data_box">
+        <div class="data_view">
+          <div class="data_item" v-for="(item,index) in list" :key="index" @click.stop="detailClick(item)">
+            <div class="data_img_box" v-if="item.picture && item.picture.substr(0,4)=='http'">
+              <el-image class="data_img" :src="item.picture" fit="cover"></el-image>
+            </div>
+            <div class="data_img_box" v-else>
+              <el-image class="data_img" :src="item.picture?$config.url + item.picture.split(',')[0]:''"
+                        fit="cover"></el-image>
+            </div>
+            <div class="data_content">
+              <div class="data_title1">{{item.name}}</div>
+            </div>
+          </div>
+        </div>
+        <el-pagination
+            background
+            :layout="layouts.join(',')"
+            :total="total"
+            :page-size="listQuery.limit"
+            prev-text="Previous"
+            next-text="Next"
+            :hide-on-single-page="false"
+            :style='{}'
+            @size-change="sizeChange"
+            @current-change="currentChange"
+            @prev-click="prevClick"
+            @next-click="nextClick"  />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-	import {
-		ref,
-		getCurrentInstance,
-		nextTick,
-	} from 'vue';
-	import {
-		useRoute,
-		useRouter
-	} from 'vue-router';
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	const router = useRouter()
-	const route = useRoute()
-	//基础信息
-	const tableName = 'storeup'
-	const formName = ref('')
-	//基础信息
-	const breadList = ref([{
-		name: formName
-	}])
-	const list = ref([])
-	const listQuery = ref({
-		page: 1,
-		limit: 20,
-        sort: 'id',
-        order: 'desc'
-	})
-	const total = ref(0)
-	const listLoading = ref(false)
-	//权限验证
-	const btnAuth = (e, a) => {
-		return context?.$toolUtil.isAuth(e, a)
-	}
-	//判断是否从个人中心跳转
-	const centerType = ref(false)
-	//返回
-	const backClick = () => {
-		router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
-	}
-	const init = () => {
-		if (route.query.centerType) {
-			centerType.value = true
-		}
+import {
+  ref,
+  getCurrentInstance,
+  nextTick,
+} from 'vue';
+import {
+  useRoute,
+  useRouter
+} from 'vue-router';
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const router = useRouter()
+const route = useRoute()
+// Basic Information
+const tableName = 'storeup'
+const formName = ref('')
+// Basic Information
+const breadList = ref([{
+  name: formName
+}])
+const list = ref([])
+const listQuery = ref({
+  page: 1,
+  limit: 20,
+  sort: 'id',
+  order: 'desc'
+})
+const total = ref(0)
+const listLoading = ref(false)
+// Permission Verification
+const btnAuth = (e, a) => {
+  return context?.$toolUtil.isAuth(e, a)
+}
+// Check if it is a personal center jump
+const centerType = ref(false)
+// Return
+const backClick = () => {
+  router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
+}
+const init = () => {
+  if (route.query.centerType) {
+    centerType.value = true
+  }
 
-        if(route.query.type=='1'){
-            formName.value = '我的收藏'
-        }
-		getList()
-	}
-	//搜索
-	const searchQuery = ref({})
+  if(route.query.type=='1'){
+    formName.value = 'My Favorites'
+  }
+  getList()
+}
+// Search
+const searchQuery = ref({})
 
-	const searchClick = () => {
-		listQuery.value.page = 1
-		getList()
-	}
-	//分页
-	const layouts = ref(["total","prev","pager","next","sizes","jumper"])
-	const sizeChange = (size) => {
-		listQuery.value.limit = size
-		getList()
-	}
-	const currentChange = (page) => {
-		listQuery.value.page = page
-		getList()
-	}
-	const prevClick = () => {
-		listQuery.value.page = listQuery.value.page - 1
-		getList()
-	}
-	const nextClick = () => {
-		listQuery.value.page = listQuery.value.page + 1
-		getList()
-	}
-	//分页
-	//列表
-	const getList = () => {
-		listLoading.value = true
-		let params = JSON.parse(JSON.stringify(listQuery.value))
-		if (searchQuery.value.name && searchQuery.value.name != '') {
-			params.name = '%' + searchQuery.value.name + '%'
-		}
-		if (route.query.type) {
-			params.type = route.query.type
-		}
-		context?.$http({
-			url: `${tableName}/page`,
-			method: 'get',
-			params: params
-		}).then(res => {
-			listLoading.value = false
-			list.value = res.data.data.list
-			total.value = Number(res.data.data.total)
-		})
-	}
-	const detailClick = (item) => {
-		router.push(`${item.tablename}Detail?id=${item.refid}`)
-	}
-	init()
+const searchClick = () => {
+  listQuery.value.page = 1
+  getList()
+}
+// Pagination
+const layouts = ref(["total","prev","pager","next","sizes","jumper"])
+const sizeChange = (size) => {
+  listQuery.value.limit = size
+  getList()
+}
+const currentChange = (page) => {
+  listQuery.value.page = page
+  getList()
+}
+const prevClick = () => {
+  listQuery.value.page = listQuery.value.page - 1
+  getList()
+}
+const nextClick = () => {
+  listQuery.value.page = listQuery.value.page + 1
+  getList()
+}
+// Pagination
+// List
+const getList = () => {
+  listLoading.value = true
+  let params = JSON.parse(JSON.stringify(listQuery.value))
+  if (searchQuery.value.name && searchQuery.value.name != '') {
+    params.name = '%' + searchQuery.value.name + '%'
+  }
+  if (route.query.type) {
+    params.type = route.query.type
+  }
+  context?.$http({
+    url: `${tableName}/page`,
+    method: 'get',
+    params: params
+  }).then(res => {
+    listLoading.value = false
+    list.value = res.data.data.list
+    total.value = Number(res.data.data.total)
+  })
+}
+const detailClick = (item) => {
+  router.push(`${item.tablename}Detail?id=${item.refid}`)
+}
+init()
 </script>
+
 <style lang="scss" scoped>
 	// 返回盒子
 	.back_view {

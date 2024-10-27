@@ -1,419 +1,421 @@
 <template>
-	<div class="center_view" :style='{}'>
-		<div class="section_title">
-			<span>{{formName}}</span>
-		</div>
-		<div class="usersView">
-			<div class="usersTabView">
-				<div class="usersTab" :class="tabIndex=='center'?'usersTabActive':''" @click="tabClick({tableName:'center'})">个人中心</div>
-				<div class="usersTab " :class="tabIndex=='updatePassword'?'usersTabActive':''" @click="tabClick({tableName:'updatePassword'})">修改密码</div>
-				<template v-for="(item,index) in menuList">
-					<div v-if="item.child.length>1" class="usersTab" @mouseenter="usersTabHover(index)"
-						 @mouseleave="usersTabLeave">
-						{{item.menu}}
-						<el-collapse-transition>
-							<div class="usersTabHoverView" v-if="usersTabIndex==index">
-								<div class="usersTabHoverTab" v-for="(items,indexs) in item.child" @click="tabClick(items)">
-									{{items.menu}}
-                                </div>
-							</div>
-						</el-collapse-transition>
-					</div>
-					<div v-else-if="hasBack(item.child[0])" class="usersTab" @click="tabClick(item.child[0])">
-						{{item.child[0].menu}}
-					</div>
-				</template>
-                <div class="usersTab" @click="tabClick({tableName:'storeup',type:1})">我的收藏</div>
-			</div>
-			<div class="usersBox updateInfo" v-if="tabIndex=='center'">
-				<el-form class="usersForm" ref="userFormRef" :model="userForm" label-width="120px" :rules="rules">
-					<el-row>
-						<el-col :span="24">
-							<el-form-item prop="xuehao" label="学号">
-								<el-input class="list_inp" v-model="userForm.xuehao" placeholder="学号" readonly></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item prop="mima" label="密码">
-								<el-input class="list_inp" v-model="userForm.mima" placeholder="密码" type="password"></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item prop="xueshengxingming" label="学生姓名">
-								<el-input class="list_inp" v-model="userForm.xueshengxingming" placeholder="学生姓名" ></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item prop="touxiang" label="头像">
-								<uploads
-									action="file/upload" 
-									tip="请上传头像" 
-									:limit="1" 
-									style="width: 100%;text-align: left;"
-									:fileUrls="userForm.touxiang?userForm.touxiang:''" 
-									@change="touxiangUploadSuccess">
-								</uploads>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item label="性别" prop="xingbie">
-								<el-select
-									class="list_sel"
-									v-model="userForm.xingbie" 
-									placeholder="请选择性别"
-									style="width:100%;"
-									>
-									<el-option v-for="(item,index) in xingbieLists" :label="item" :value="item">
-									</el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item prop="shoujihaoma" label="手机号码">
-								<el-input class="list_inp" v-model="userForm.shoujihaoma" placeholder="手机号码" ></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item label="家长账号" prop="jiazhangzhanghao">
-								<el-select
-									class="list_sel"
-									v-model="userForm.jiazhangzhanghao" 
-									placeholder="请选择家长账号"
-									style="width:100%;"
-									>
-									<el-option v-for="(item,index) in jiazhangzhanghaoLists" :label="item" :value="item">
-									</el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<div class="formModel_btn_box">
-						<el-button class="formModel_confirm" @click="updateSession">更新信息</el-button>
-						<el-button class="formModel_cancel" @click="loginout" type="danger">退出登录</el-button>
-					</div>
-				</el-form>
-			</div>
-			<div class="usersBox updatePassword" v-if="tabIndex=='updatePassword'">
-				<el-form class="usersForm" ref="passwordFormRef" :model="passwordForm" label-width="120px"
-					:rules="passwordRules">
-					<el-row>
-						<el-col :span="24">
-							<el-form-item label="原密码" prop="mima">
-								<el-input class="list_inp" v-model="passwordForm.mima" placeholder="原密码"
-									type="password"></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item label="新密码" prop="newmima">
-								<el-input class="list_inp" v-model="passwordForm.newmima" placeholder="新密码"
-									type="password"></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="24">
-							<el-form-item label="确认密码" prop="newmima2">
-								<el-input class="list_inp" v-model="passwordForm.newmima2" placeholder="确认密码"
-									type="password"></el-input>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					<div class="formModel_btn_box">
-						<el-button class="formModel_confirm" @click="updatePassword">修改密码</el-button>
-					</div>
-				</el-form>
-			</div>
-		</div>
-	</div>
+  <div class="center_view" :style='{}'>
+    <div class="section_title">
+      <span>{{formName}}</span>
+    </div>
+    <div class="usersView">
+      <div class="usersTabView">
+        <div class="usersTab" :class="tabIndex=='center'?'usersTabActive':''" @click="tabClick({tableName:'center'})">Personal Center</div>
+        <div class="usersTab " :class="tabIndex=='updatePassword'?'usersTabActive':''" @click="tabClick({tableName:'updatePassword'})">Change Password</div>
+        <template v-for="(item,index) in menuList">
+          <div v-if="item.child.length>1" class="usersTab" @mouseenter="usersTabHover(index)"
+               @mouseleave="usersTabLeave">
+            {{item.menu}}
+            <el-collapse-transition>
+              <div class="usersTabHoverView" v-if="usersTabIndex==index">
+                <div class="usersTabHoverTab" v-for="(items,indexs) in item.child" @click="tabClick(items)">
+                  {{items.menu}}
+                </div>
+              </div>
+            </el-collapse-transition>
+          </div>
+          <div v-else-if="hasBack(item.child[0])" class="usersTab" @click="tabClick(item.child[0])">
+            {{item.child[0].menu}}
+          </div>
+        </template>
+        <div class="usersTab" @click="tabClick({tableName:'storeup',type:1})">My Favorites</div>
+      </div>
+      <div class="usersBox updateInfo" v-if="tabIndex=='center'">
+        <el-form class="usersForm" ref="userFormRef" :model="userForm" label-width="120px" :rules="rules">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item prop="xuehao" label="Student ID">
+                <el-input class="list_inp" v-model="userForm.xuehao" placeholder="Student ID" readonly></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item prop="mima" label="Password">
+                <el-input class="list_inp" v-model="userForm.mima" placeholder="Password" type="password"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item prop="xueshengxingming" label="Student Name">
+                <el-input class="list_inp" v-model="userForm.xueshengxingming" placeholder="Student Name" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item prop="touxiang" label="Profile Picture">
+                <uploads
+                    action="file/upload"
+                    tip="Please upload a profile picture"
+                    :limit="1"
+                    style="width: 100%;text-align: left;"
+                    :fileUrls="userForm.touxiang?userForm.touxiang:''"
+                    @change="touxiangUploadSuccess">
+                </uploads>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="Gender" prop="xingbie">
+                <el-select
+                    class="list_sel"
+                    v-model="userForm.xingbie"
+                    placeholder="Please select gender"
+                    style="width:100%;"
+                >
+                  <el-option v-for="(item,index) in xingbieLists" :label="item" :value="item">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item prop="shoujihaoma" label="Mobile Number">
+                <el-input class="list_inp" v-model="userForm.shoujihaoma" placeholder="Mobile Number" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="Parent Account" prop="jiazhangzhanghao">
+                <el-select
+                    class="list_sel"
+                    v-model="userForm.jiazhangzhanghao"
+                    placeholder="Please select parent account"
+                    style="width:100%;"
+                >
+                  <el-option v-for="(item,index) in jiazhangzhanghaoLists" :label="item" :value="item">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <div class="formModel_btn_box">
+            <el-button class="formModel_confirm" @click="updateSession">Update Info</el-button>
+            <el-button class="formModel_cancel" @click="loginout" type="danger">Logout</el-button>
+          </div>
+        </el-form>
+      </div>
+      <div class="usersBox updatePassword" v-if="tabIndex=='updatePassword'">
+        <el-form class="usersForm" ref="passwordFormRef" :model="passwordForm" label-width="120px"
+                 :rules="passwordRules">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="Current Password" prop="mima">
+                <el-input class="list_inp" v-model="passwordForm.mima" placeholder="Current Password"
+                          type="password"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="New Password" prop="newmima">
+                <el-input class="list_inp" v-model="passwordForm.newmima" placeholder="New Password"
+                          type="password"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="Confirm Password" prop="newmima2">
+                <el-input class="list_inp" v-model="passwordForm.newmima2" placeholder="Confirm Password"
+                          type="password"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <div class="formModel_btn_box">
+            <el-button class="formModel_confirm" @click="updatePassword">Change Password</el-button>
+          </div>
+        </el-form>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script setup>
-	import {
-		ElMessageBox
-	} from 'element-plus'
-	import moment from 'moment'
-	import {
-		ref,
-		getCurrentInstance,
-		watch,
-		onUnmounted,
-		onMounted,
-	} from 'vue';
-	import {
-		useRoute,
-		useRouter
-	} from 'vue-router';
-	import { useStore } from 'vuex'
-	const store = useStore()
-	import menu from '@/utils/menu'
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	const route = useRoute()
-	const router = useRouter()
-	//基础信息
-	const tableName = 'xuesheng'
-	const formName = '个人中心'
-	//基础信息
-	const uploadUrl = context.$config.url + 'file/upload'
-	//个人信息
-	const userFormRef = ref(null)
-	const userForm = ref({})
-	//修改密码
-	const passwordFormRef = ref(null)
-	const passwordForm = ref({
-		mima: '',
-		newmima: '',
-		newmima2: ''
-	})
-	const passwordRules = ref({
-		mima: [{
-			required: true,
-			message: '请输入',
-			trigger: 'blur'
-		}, ],
-		newmima: [{
-			required: true,
-			message: '请输入',
-			trigger: 'blur'
-		}, ],
-		newmima2: [{
-			required: true,
-			message: '请输入',
-			trigger: 'blur'
-		}, ],
-	})
-	//验证规则
-	//匹配整数
-	const validateIntNumber = (rule, value, callback) => {
-		if (!value) {
-			callback();
-		} else if (!context?.$toolUtil.isIntNumer(value)) {
-			callback(new Error("请输入整数"));
-		} else {
-			callback();
-		}
-	}
-	//匹配数字
-	const validateNumber = (rule, value, callback) => {
-		if(!value){
-			callback();
-		} else if (!context?.$toolUtil.isNumber(value)) {
-			callback(new Error("请输入数字"));
-		} else {
-			callback();
-		}
-	}
-	//匹配手机号码
-	const validateMobile = (rule, value, callback) => {
-		if(!value){
-			callback();
-		} else if (!context?.$toolUtil.isMobile(value)) {
-			callback(new Error("请输入正确的手机号码"));
-		} else {
-			callback();
-		}
-	}
-	//匹配电话号码
-	const validatePhone = (rule, value, callback) => {
-		if(!value){
-			callback();
-		} else if (!context?.$toolUtil.isPhone(value)) {
-			callback(new Error("请输入正确的电话号码"));
-		} else {
-			callback();
-		}
-	}
-	//匹配邮箱
-	const validateEmail = (rule, value, callback) => {
-		if(!value){
-			callback();
-		} else if (!context?.$toolUtil.isEmail(value)) {
-			callback(new Error("请输入正确的邮箱地址"));
-		} else {
-			callback();
-		}
-	}
-	//匹配身份证
-	const validateIdCard = (rule, value, callback) => {
-		if(!value){
-			callback();
-		} else if (!context?.$toolUtil.checkIdCard(value)) {
-			callback(new Error("请输入正确的身份证号码"));
-		} else {
-			callback();
-		}
-	}
-	//匹配网站地址
-	const validateUrl = (rule, value, callback) => {
-		if(!value){
-			callback();
-		} else if (!context?.$toolUtil.isURL(value)) {
-			callback(new Error("请输入正确的URL地址"));
-		} else {
-			callback();
-		}
-	}
-	const rules = ref({
-		xuehao: [
-			{required: true,message: '请输入',trigger: 'blur'}, 
-		],
-		mima: [
-			{required: true,message: '请输入',trigger: 'blur'}, 
-		],
-		xueshengxingming: [
-			{required: true,message: '请输入',trigger: 'blur'}, 
-		],
-		touxiang: [
-		],
-		xingbie: [
-		],
-		shoujihaoma: [
-			{ validator: validateMobile, trigger: 'blur' },
-		],
-		jiazhangzhanghao: [
-		],
-	})
-	const getSession = () =>{
-		context?.$http({
-			url: `${context?.$toolUtil.storageGet('frontSessionTable')}/session`,
-			method:'get'
-		}).then(res=>{
-			context?.$toolUtil.storageSet('userid',res.data.data.id)
-			context?.$toolUtil.storageSet("frontName", res.data.data.xuehao)
-			context?.$toolUtil.storageSet('headportrait',res.data.data.touxiang)
-			userForm.value = res.data.data
-		})
-	}
-	//菜单跳转
-	const tabIndex = ref('center')
-	const tabClick = (item) => {
-		if (item.tableName == 'center') {
-			tabIndex.value = 'center'
-			return
-		}
-		if (item.tableName == 'updatePassword') {
-			passwordForm.value = {
-				mima: '',
-				newmima: '',
-				newmima2: ''
-			}
-			tabIndex.value = 'updatePassword'
-			return
-		}
-		if(item.tableName=='examrecord'&&item.menuJump=='22'){
-			router.push(`/index/examfailrecord?centerType=1`)
-			return
-		}
-		if(item.tableName=='forum'&&item.menuJump=='14'){
-			router.push(`/index/forumList?centerType=1&&myType=1`)
-			return
-		}
-        if(item.tableName=='storeup'){
-            router.push(`/index/storeupList?centerType=1&&type=${item.type}`)
-            return;
-        }
-        router.push(`/index/${item.classname||item.tableName}List?centerType=1${item.menuJump?'&menuJump='+item.menuJump:''}`)
-	}
-    const hasBack = (menu)=>{
-        if(menu.tableName=='storeup'){
-            return false
-        }
-        return true
+import {
+  ElMessageBox
+} from 'element-plus'
+import moment from 'moment'
+import {
+  ref,
+  getCurrentInstance,
+  watch,
+  onUnmounted,
+  onMounted,
+} from 'vue';
+import {
+  useRoute,
+  useRouter
+} from 'vue-router';
+import { useStore } from 'vuex'
+const store = useStore()
+import menu from '@/utils/menu'
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const route = useRoute()
+const router = useRouter()
+// Basic information
+const tableName = 'xuesheng'
+const formName = 'Personal Center'
+// Basic information
+const uploadUrl = context.$config.url + 'file/upload'
+// Personal information
+const userFormRef = ref(null)
+const userForm = ref({})
+// Change password
+const passwordFormRef = ref(null)
+const passwordForm = ref({
+  mima: '',
+  newmima: '',
+  newmima2: ''
+})
+const passwordRules = ref({
+  mima: [{
+    required: true,
+    message: 'Please enter',
+    trigger: 'blur'
+  }, ],
+  newmima: [{
+    required: true,
+    message: 'Please enter',
+    trigger: 'blur'
+  }, ],
+  newmima2: [{
+    required: true,
+    message: 'Please enter',
+    trigger: 'blur'
+  }, ],
+})
+// Validation rules
+// Match integers
+const validateIntNumber = (rule, value, callback) => {
+  if (!value) {
+    callback();
+  } else if (!context?.$toolUtil.isIntNumer(value)) {
+    callback(new Error("Please enter an integer"));
+  } else {
+    callback();
+  }
+}
+// Match numbers
+const validateNumber = (rule, value, callback) => {
+  if(!value){
+    callback();
+  } else if (!context?.$toolUtil.isNumber(value)) {
+    callback(new Error("Please enter a number"));
+  } else {
+    callback();
+  }
+}
+// Match mobile numbers
+const validateMobile = (rule, value, callback) => {
+  if(!value){
+    callback();
+  } else if (!context?.$toolUtil.isMobile(value)) {
+    callback(new Error("Please enter a valid mobile number"));
+  } else {
+    callback();
+  }
+}
+// Match phone numbers
+const validatePhone = (rule, value, callback) => {
+  if(!value){
+    callback();
+  } else if (!context?.$toolUtil.isPhone(value)) {
+    callback(new Error("Please enter a valid phone number"));
+  } else {
+    callback();
+  }
+}
+// Match email
+const validateEmail = (rule, value, callback) => {
+  if(!value){
+    callback();
+  } else if (!context?.$toolUtil.isEmail(value)) {
+    callback(new Error("Please enter a valid email address"));
+  } else {
+    callback();
+  }
+}
+// Match ID card
+const validateIdCard = (rule, value, callback) => {
+  if(!value){
+    callback();
+  } else if (!context?.$toolUtil.checkIdCard(value)) {
+    callback(new Error("Please enter a valid ID card number"));
+  } else {
+    callback();
+  }
+}
+// Match URL
+const validateUrl = (rule, value, callback) => {
+  if(!value){
+    callback();
+  } else if (!context?.$toolUtil.isURL(value)) {
+    callback(new Error("Please enter a valid URL"));
+  } else {
+    callback();
+  }
+}
+const rules = ref({
+  xuehao: [
+    {required: true,message: 'Please enter',trigger: 'blur'},
+  ],
+  mima: [
+    {required: true,message: 'Please enter',trigger: 'blur'},
+  ],
+  xueshengxingming: [
+    {required: true,message: 'Please enter',trigger: 'blur'},
+  ],
+  touxiang: [
+  ],
+  xingbie: [
+  ],
+  shoujihaoma: [
+    { validator: validateMobile, trigger: 'blur' },
+  ],
+  jiazhangzhanghao: [
+  ],
+})
+const getSession = () =>{
+  context?.$http({
+    url: `${context?.$toolUtil.storageGet('frontSessionTable')}/session`,
+    method:'get'
+  }).then(res=>{
+    context?.$toolUtil.storageSet('userid',res.data.data.id)
+    context?.$toolUtil.storageSet("frontName", res.data.data.xuehao)
+    context?.$toolUtil.storageSet('headportrait',res.data.data.touxiang)
+    userForm.value = res.data.data
+  })
+}
+// Menu navigation
+const tabIndex = ref('center')
+const tabClick = (item) => {
+  if (item.tableName == 'center') {
+    tabIndex.value = 'center'
+    return
+  }
+  if (item.tableName == 'updatePassword') {
+    passwordForm.value = {
+      mima: '',
+      newmima: '',
+      newmima2: ''
     }
-	// 修改密码
-	const updatePassword = async ()=>{
-		passwordFormRef.value.validate(async (valid) => {
-			if (valid) {
-				if(passwordForm.value.mima != userForm.value.mima){
-					context?.$toolUtil.message('原密码不正确', 'error')
-					return false
-				}
-				if(passwordForm.value.newmima != passwordForm.value.newmima2){
-					context?.$toolUtil.message('两次密码输入不正确', 'error')
-					return false
-				}
-				userForm.value.mima = passwordForm.value.newmima
-				store.dispatch('user/update',userForm.value).then(res=>{
-					if(res?.data&&res.data.code==0){
-						context?.$toolUtil.message('更新成功','success')
-						passwordForm.value = {
-							mima: '',
-							newmima: '',
-							newmima2: ''
-						}
-						getSession()
-					}
-				})
-			}
-		})
-	}
-	//菜单
-	const menuList = ref([])
-	const role = ref('')
-	//头像上传回调
-	const touxiangUploadSuccess=(e)=>{
-		userForm.value.touxiang = e
-	}
-	//性别列表
-	const xingbieLists = ref([])
-	//家长账号列表
-	const jiazhangzhanghaoLists = ref([])
-	//初始化
-	const init = () => {
-		const menus = menu.list()
-		let arr = []
-		if (menus) {
-			menuList.value = menus
-		}
-		role.value = context?.$toolUtil.storageGet('frontRole')
-		for (let i = 0; i < menuList.value.length; i++) {
-			if (menuList.value[i].roleName == role.value) {
-				arr = menuList.value[i].backMenu
-				break;
-			}
-		}
-		menuList.value = arr
-		xingbieLists.value = "男,女".split(',')
-		context?.$http({
-			url: `option/jiazhang/jiazhangzhanghao`,
-			method: 'get'
-		}).then(res=>{
-			jiazhangzhanghaoLists.value = res.data.data
-		})
-		getSession()
-	}
-	//菜单悬浮的显示与隐藏
-	const usersTabIndex = ref(-1)
-	const usersTabHover = (index) => {
-		usersTabIndex.value = index
-	}
-	const usersTabLeave = () => {
-		usersTabIndex.value = -1
-	}
-	//富文本
-	const editorChange = (e,name) =>{
-		userForm.value[name] = e
-	}
-	//保存
-	const updateSession = () => {
-		userFormRef.value.validate((valid)=>{
-			if(valid){
-				if(userForm.value.touxiang!=null){
-					userForm.value.touxiang = userForm.value.touxiang.replace(new RegExp(context?.$config.url,"g"),"");
-				}
-				store.dispatch('user/update',userForm.value).then(res=>{
-					if(res?.data&&res.data.code==0){
-						context?.$toolUtil.message('更新成功','success')
-						getSession()
-					}
-				})
-			}
-		})
-	}
-	//退出登录
-	const loginout = () => {
-		context?.$toolUtil.message('退出成功', 'success')
-		context?.$toolUtil.storageClear()
-		router.replace('/index/home')
-	}
-	init()
+    tabIndex.value = 'updatePassword'
+    return
+  }
+  if(item.tableName=='examrecord'&&item.menuJump=='22'){
+    router.push(`/index/examfailrecord?centerType=1`)
+    return
+  }
+  if(item.tableName=='forum'&&item.menuJump=='14'){
+    router.push(`/index/forumList?centerType=1&&myType=1`)
+    return
+  }
+  if(item.tableName=='storeup'){
+    router.push(`/index/storeupList?centerType=1&&type=${item.type}`)
+    return;
+  }
+  router.push(`/index/${item.classname||item.tableName}List?centerType=1${item.menuJump?'&menuJump='+item.menuJump:''}`)
+}
+const hasBack = (menu)=>{
+  if(menu.tableName=='storeup'){
+    return false
+  }
+  return true
+}
+// Change password
+const updatePassword = async ()=>{
+  passwordFormRef.value.validate(async (valid) => {
+    if (valid) {
+      if(passwordForm.value.mima != userForm.value.mima){
+        context?.$toolUtil.message('Original password is incorrect', 'error')
+        return false
+      }
+      if(passwordForm.value.newmima != passwordForm.value.newmima2){
+        context?.$toolUtil.message('The two passwords entered are incorrect', 'error')
+        return false
+      }
+      userForm.value.mima = passwordForm.value.newmima
+      store.dispatch('user/update',userForm.value).then(res=>{
+        if(res?.data&&res.data.code==0){
+          context?.$toolUtil.message('Update successful','success')
+          passwordForm.value = {
+            mima: '',
+            newmima: '',
+            newmima2: ''
+          }
+          getSession()
+        }
+      })
+    }
+  })
+}
+// Menu
+const menuList = ref([])
+const role = ref('')
+// Profile picture upload callback
+const touxiangUploadSuccess=(e)=>{
+  userForm.value.touxiang = e
+}
+// Gender list
+const xingbieLists = ref([])
+// Parent account list
+const jiazhangzhanghaoLists = ref([])
+// Initialization
+const init = () => {
+  const menus = menu.list()
+  let arr = []
+  if (menus) {
+    menuList.value = menus
+  }
+  role.value = context?.$toolUtil.storageGet('frontRole')
+  for (let i = 0; i < menuList.value.length; i++) {
+    if (menuList.value[i].roleName == role.value) {
+      arr = menuList.value[i].backMenu
+      break;
+    }
+  }
+  menuList.value = arr
+  xingbieLists.value = "Male,Female".split(',')
+  context?.$http({
+    url: `option/jiazhang/jiazhangzhanghao`,
+    method: 'get'
+  }).then(res=>{
+    jiazhangzhanghaoLists.value = res.data.data
+  })
+  getSession()
+}
+// Show and hide menu hover
+const usersTabIndex = ref(-1)
+const usersTabHover = (index) => {
+  usersTabIndex.value = index
+}
+const usersTabLeave = () => {
+  usersTabIndex.value = -1
+}
+// Rich text editor
+const editorChange = (e,name) =>{
+  userForm.value[name] = e
+}
+// Save
+const updateSession = () => {
+  userFormRef.value.validate((valid)=>{
+    if(valid){
+      if(userForm.value.touxiang!=null){
+        userForm.value.touxiang = userForm.value.touxiang.replace(new RegExp(context?.$config.url,"g"),"");
+      }
+      store.dispatch('user/update',userForm.value).then(res=>{
+        if(res?.data&&res.data.code==0){
+          context?.$toolUtil.message('Update successful','success')
+          getSession()
+        }
+      })
+    }
+  })
+}
+// Logout
+const loginout = () => {
+  context?.$toolUtil.message('Logout successful', 'success')
+  context?.$toolUtil.storageClear()
+  router.replace('/index/home')
+}
+init()
 </script>
+
 
 <style lang="scss" scoped>
 	.usersView {

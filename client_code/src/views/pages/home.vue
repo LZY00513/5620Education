@@ -1,72 +1,93 @@
 <template>
-	<div>
-		<div class="home_box">
-			<!-- 教师首页展示 -->
-			<div class="homeList_view">
-				<div class="homeList_title">
-                    <span>教师展示</span>
+  <div>
+    <div class="home_box">
+      <!-- Teacher Home Display -->
+      <div class="homeList_view">
+        <div class="homeList_title">
+          <span>Teacher Display</span>
+        </div>
+        <div class="homeList">
+          <div class="item" v-for="(item,index) in jiaoshiHomeList" :key="index" @click="detailClick('jiaoshi',item.id)">
+            <div class="img-box">
+              <img v-if="isHttp(item.touxiang)" :src="item.touxiang.split(',')[0]" alt="">
+              <img v-else :src="item.touxiang?$config.url + item.touxiang.split(',')[0]:''" alt="">
+            </div>
+            <div class="content-box">
+              <div class="title">
+                {{item.jiaoshixingming}}
+              </div>
+              <div class="title">
+                Major: {{item.zhuanye}}
+              </div>
+              <div class="statistic">
+                <div class="collect">
+                  <span class="iconfont icon-likeline4"></span>
+                  <div class="num">{{item.storeupNumber}}</div>
                 </div>
-				<div class="homeList">
-					<div class="item" v-for="(item,index) in jiaoshiHomeList" :key="index" @click="detailClick('jiaoshi',item.id)">
-						<div class="img-box">
-							<img v-if="isHttp(item.touxiang)" :src="item.touxiang.split(',')[0]" alt="">
-							<img v-else :src="item.touxiang?$config.url + item.touxiang.split(',')[0]:''" alt="">
-						</div>
-						<div class="content-box">
-							<div class="title">
-								{{item.jiaoshixingming}}
-							</div>
-							<div class="title">
-								专业：{{item.zhuanye}}
-							</div>
-							<div class="statistic">
-								<div class="collect">
-									<span class="iconfont icon-likeline4"></span>
-									<div class="num">{{item.storeupNumber}}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="homeList_more_view" @click="moreClick('jiaoshi')">
-					<span class="homeList_more_text">查看更多 +</span>
-				</div>
-			</div>
-			<!-- 作业信息首页展示 -->
-			<div class="homeList_view">
-				<div class="homeList_title">
-                    <span>作业信息展示</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="homeList_more_view" @click="moreClick('jiaoshi')">
+          <span class="homeList_more_text">View More +</span>
+        </div>
+      </div>
+      <!-- Assignment Information Home Display -->
+      <div class="homeList_view">
+        <div class="homeList_title">
+          <span>Assignment Information Display</span>
+        </div>
+        <div class="homeList">
+          <div class="item" v-for="(item,index) in zuoyexinxiHomeList" :key="index" @click="detailClick('zuoyexinxi',item.id)">
+            <div class="img-box">
+              <img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
+              <img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
+            </div>
+            <div class="content-box">
+              <div class="title">
+                {{item.zuoyemingcheng}}
+              </div>
+              <div class="title">
+                Release Time: {{item.fabushijian}}
+              </div>
+              <div class="statistic">
+                <div class="collect">
+                  <span class="iconfont icon-likeline4"></span>
+                  <div class="num">{{item.storeupNumber}}</div>
                 </div>
-				<div class="homeList">
-					<div class="item" v-for="(item,index) in zuoyexinxiHomeList" :key="index" @click="detailClick('zuoyexinxi',item.id)">
-						<div class="img-box">
-							<img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
-							<img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
-						</div>
-						<div class="content-box">
-							<div class="title">
-								{{item.zuoyemingcheng}}
-							</div>
-							<div class="title">
-								发布时间：{{item.fabushijian}}
-							</div>
-							<div class="statistic">
-								<div class="collect">
-									<span class="iconfont icon-likeline4"></span>
-									<div class="num">{{item.storeupNumber}}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="homeList_more_view" @click="moreClick('zuoyexinxi')">
-					<span class="homeList_more_text">查看更多 +</span>
-				</div>
-			</div>
-			<!-- 教学资源首页展示 -->
-			<div class="homeList_view">
-				<div class="homeList_title">
-                    <span>教学资源展示</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="homeList_more_view" @click="moreClick('zuoyexinxi')">
+          <span class="homeList_more_text">View More +</span>
+        </div>
+      </div>
+      <!-- Teaching Resources Home Display -->
+      <div class="homeList_view">
+        <div class="homeList_title">
+          <span>Teaching Resources Display</span>
+        </div>
+        <div class="categoryList">
+          <div class="item" @click="jiaoxueziyuanCategoryChange(-1)" style="cursor: pointer" :class="{active:jiaoxueziyuan_index==-1}">All</div>
+          <div class="item" v-for="(item,index) in jiaoxueziyuanCategorys" @click="jiaoxueziyuanCategoryChange(index)" :class="{active:jiaoxueziyuan_index==index}" style="cursor: pointer">
+            {{item}}
+          </div>
+        </div>
+        <div class="homeList">
+          <div class="item" v-for="(item,index) in jiaoxueziyuanHomeList" :key="index" @click="detailClick('jiaoxueziyuan',item.id)">
+            <div class="img-box">
+              <img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
+              <img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
+            </div>
+            <div class="content-box">
+              <div class="title">
+                {{item.ziyuanmingcheng}}
+              </div>
+              <div class="statistic">
+                <div class="collect">
+                  <span class="iconfont icon-likeline4"></span>
+                  <div class="num">{{item.storeupNumber}}</div>
                 </div>
 				<div class="categoryList">
 					<div class="item" @click="jiaoxueziyuanCategoryChange(-1)" style="cursor: pointer" :class="{active:jiaoxueziyuan_index==-1}">全部</div>
@@ -129,6 +150,7 @@
     <ChatAssistant />
 	</div>
 </template>
+
 
 <script setup>
 import ChatAssistant from '@/views/pages/ChatAssistant.vue';
@@ -272,6 +294,7 @@ import ChatAssistant from '@/views/pages/ChatAssistant.vue';
 
   init()
 </script>
+
 
 <style lang="scss">
 	.home_box {

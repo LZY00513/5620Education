@@ -67,9 +67,9 @@ public class JiazhangController {
 	public R login(String username, String password, String captcha, HttpServletRequest request) {
 		JiazhangEntity u = jiazhangService.getOne(new QueryWrapper<JiazhangEntity>().eq("jiazhangzhanghao", username));
         if(u==null || !u.getMima().equals(password)) {
-            return R.error("账号或密码不正确");
+            return R.error("id or password error");
         }
-		String token = tokenService.generateToken(u.getId(), username,"jiazhang",  "家长" );
+		String token = tokenService.generateToken(u.getId(), username,"jiazhang",  "parent" );
 		return R.ok().put("token", token);
 	}
 
@@ -84,7 +84,7 @@ public class JiazhangController {
     	//ValidatorUtils.validateEntity(jiazhang);
     	JiazhangEntity u = jiazhangService.getOne(new QueryWrapper<JiazhangEntity>().eq("jiazhangzhanghao", jiazhang.getJiazhangzhanghao()));
 		if(u!=null) {
-			return R.error("注册用户已存在");
+			return R.error("id existed");
 		}
 		Long uId = new Date().getTime();
 		jiazhang.setId(uId);
@@ -99,7 +99,7 @@ public class JiazhangController {
 	@RequestMapping("/logout")
 	public R logout(HttpServletRequest request) {
 		request.getSession().invalidate();
-		return R.ok("退出成功");
+		return R.ok("exit success");
 	}
 
 	/**
@@ -119,11 +119,11 @@ public class JiazhangController {
     public R resetPass(String username, HttpServletRequest request){
     	JiazhangEntity u = jiazhangService.getOne(new QueryWrapper<JiazhangEntity>().eq("jiazhangzhanghao", username));
     	if(u==null) {
-    		return R.error("账号不存在");
+    		return R.error("id not exist");
     	}
         u.setMima("123456");
         jiazhangService.updateById(u);
-        return R.ok("密码已重置为：123456");
+        return R.ok("password overlapped as：123456");
     }
 
 
@@ -183,7 +183,7 @@ public class JiazhangController {
         QueryWrapper< JiazhangEntity> ew = new QueryWrapper< JiazhangEntity>();
  		ew.allEq(MPUtil.allEQMapPre( jiazhang, "jiazhang"));
 		JiazhangView jiazhangView =  jiazhangService.selectView(ew);
-		return R.ok("查询家长成功").put("data", jiazhangView);
+		return R.ok("search parent success").put("data", jiazhangView);
     }
 
     /**
@@ -216,13 +216,13 @@ public class JiazhangController {
     @RequestMapping("/save")
     public R save(@RequestBody JiazhangEntity jiazhang, HttpServletRequest request){
         if(jiazhangService.count(new QueryWrapper<JiazhangEntity>().eq("jiazhangzhanghao", jiazhang.getJiazhangzhanghao()))>0) {
-            return R.error("家长账号已存在");
+            return R.error("parent id exist");
         }
     	jiazhang.setId(new Date().getTime()+(long)Math.floor(Math.random()*1000));
     	//ValidatorUtils.validateEntity(jiazhang);
     	JiazhangEntity u = jiazhangService.getOne(new QueryWrapper<JiazhangEntity>().eq("jiazhangzhanghao", jiazhang.getJiazhangzhanghao()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("id exist");
 		}
 		jiazhang.setId(new Date().getTime());
         jiazhangService.save(jiazhang);
@@ -235,13 +235,13 @@ public class JiazhangController {
     @RequestMapping("/add")
     public R add(@RequestBody JiazhangEntity jiazhang, HttpServletRequest request){
         if(jiazhangService.count(new QueryWrapper<JiazhangEntity>().eq("jiazhangzhanghao", jiazhang.getJiazhangzhanghao()))>0) {
-            return R.error("家长账号已存在");
+            return R.error("parent exist");
         }
     	jiazhang.setId(new Date().getTime()+(long)Math.floor(Math.random()*1000));
     	//ValidatorUtils.validateEntity(jiazhang);
     	JiazhangEntity u = jiazhangService.getOne(new QueryWrapper<JiazhangEntity>().eq("jiazhangzhanghao", jiazhang.getJiazhangzhanghao()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("id existed");
 		}
 		jiazhang.setId(new Date().getTime());
         jiazhangService.save(jiazhang);

@@ -1,153 +1,155 @@
 <template>
-	<div>
-		<div class="register_view">
-			<el-form :model="registerForm" class="register_form">
-				<div class="title_view">{{projectName}}注册</div>
-				<div class="list_item">
-					<div class="list_label">家长账号：</div>
-					<input class="list_inp"
-					 v-model="registerForm.jiazhangzhanghao" 
-					 placeholder="请输入家长账号"
-					 type="text"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">密码：</div>
-					<input class="list_inp"
-					 v-model="registerForm.mima" 
-					 placeholder="请输入密码"
-					 type="password"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">确认密码：</div>
-					<input class="list_inp" v-model="registerForm.mima2" type="password" placeholder="请输入确认密码" />
-				</div>
-				<div class="list_item">
-					<div class="list_label">家长姓名：</div>
-					<input class="list_inp"
-					 v-model="registerForm.jiazhangxingming" 
-					 placeholder="请输入家长姓名"
-					 type="text"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">性别：</div>
-					<el-select 
-						class="list_sel" 
-						v-model="registerForm.xingbie" 
-						placeholder="请选择性别"
-						>
-						<el-option v-for="item in jiazhangxingbieLists" :label="item" :value="item"></el-option>
-					</el-select>
-				</div>
-				<div class="list_item">
-					<div class="list_label">手机号码：</div>
-					<input class="list_inp"
-					 v-model="registerForm.shoujihaoma" 
-					 placeholder="请输入手机号码"
-					 type="text"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">学号：</div>
-					<el-select 
-						class="list_sel" 
-						v-model="registerForm.xuehao" 
-						placeholder="请选择学号"
-						>
-						<el-option v-for="item in jiazhangxuehaoLists" :label="item" :value="item"></el-option>
-					</el-select>
-				</div>
-				<div class="list_btn">
-					<el-button class="register" type="success" @click="handleRegister">注册</el-button>
-					<div class="r-login" @click="close">已有账号，直接登录</div>
-				</div>
-			</el-form>	
-		</div>
-	</div>
+  <div>
+    <div class="register_view">
+      <el-form :model="registerForm" class="register_form">
+        <div class="title_view">{{projectName}} Registration</div>
+        <div class="list_item">
+          <div class="list_label">Parent Account:</div>
+          <input class="list_inp"
+                 v-model="registerForm.jiazhangzhanghao"
+                 placeholder="Please enter parent account"
+                 type="text"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Password:</div>
+          <input class="list_inp"
+                 v-model="registerForm.mima"
+                 placeholder="Please enter password"
+                 type="password"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Confirm Password:</div>
+          <input class="list_inp" v-model="registerForm.mima2" type="password" placeholder="Please enter confirm password" />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Parent Name:</div>
+          <input class="list_inp"
+                 v-model="registerForm.jiazhangxingming"
+                 placeholder="Please enter parent name"
+                 type="text"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Gender:</div>
+          <el-select
+              class="list_sel"
+              v-model="registerForm.xingbie"
+              placeholder="Please select gender"
+          >
+            <el-option v-for="item in jiazhangxingbieLists" :label="item" :value="item"></el-option>
+          </el-select>
+        </div>
+        <div class="list_item">
+          <div class="list_label">Mobile Number:</div>
+          <input class="list_inp"
+                 v-model="registerForm.shoujihaoma"
+                 placeholder="Please enter mobile number"
+                 type="text"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Student Number:</div>
+          <el-select
+              class="list_sel"
+              v-model="registerForm.xuehao"
+              placeholder="Please select student number"
+          >
+            <el-option v-for="item in jiazhangxuehaoLists" :label="item" :value="item"></el-option>
+          </el-select>
+        </div>
+        <div class="list_btn">
+          <el-button class="register" type="success" @click="handleRegister">Register</el-button>
+          <div class="r-login" @click="close">Already have an account? Log in directly</div>
+        </div>
+      </el-form>
+    </div>
+  </div>
 </template>
-<script setup>
-	import {
-		ref,
-		getCurrentInstance,
-		nextTick,
-		onMounted,
-	} from 'vue';
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	const projectName = context?.$project.projectName
-	//获取注册类型
-	import { useRoute } from 'vue-router';
-	const route = useRoute()
-	const tableName = ref('jiazhang')
-	
-	//公共方法
-	const getUUID=()=> {
-		return new Date().getTime();
-	}
-	
-	const registerForm = ref({
-        xingbie: '',
-        xuehao: '',
-	})
-	const jiazhangxingbieLists = ref([])
-	const jiazhangxuehaoLists = ref([])
-	const init=()=>{
-		jiazhangxingbieLists.value = "男,女".split(',')
-		context?.$http({
-			url:`option/xuesheng/xuehao`,
-			method:'get'
-		}).then(res=>{
-			jiazhangxuehaoLists.value = res.data.data
-		})
-	}
-	// 多级联动参数
-	//注册按钮
-	const handleRegister = () => {
-		let url = tableName.value +"/register";
-		if((!registerForm.value.jiazhangzhanghao)){
-			context?.$toolUtil.message(`家长账号不能为空`,'error')
-			return false
-		}
-		if((!registerForm.value.mima)){
-			context?.$toolUtil.message(`密码不能为空`,'error')
-			return false
-		}
-		if(registerForm.value.mima!=registerForm.value.mima2){
-			context?.$toolUtil.message('两次密码输入不一致','error')
-			return false
-		}
-		if((!registerForm.value.jiazhangxingming)){
-			context?.$toolUtil.message(`家长姓名不能为空`,'error')
-			return false
-		}
-		if(registerForm.value.shoujihaoma&&(!context?.$toolUtil.isMobile(registerForm.value.shoujihaoma))){
-			context?.$toolUtil.message(`手机号码应输入手机格式`,'error')
-			return false
-		}
-		context?.$http({
-			url:url,
-			method:'post',
-			data:registerForm.value
-		}).then(res=>{
-			context?.$toolUtil.message('注册成功','success', obj=>{
-				context?.$router.push({
-					path: "/login"
-				});
-			})
-		})
-	}
-	//返回登录
-	const close = () => {
-		context?.$router.push({
-			path: "/login"
-		});
-	}
-	init()
-	onMounted(()=>{
 
-	})
+<script setup>
+import {
+  ref,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+} from 'vue';
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const projectName = context?.$project.projectName
+// Get registration type
+import { useRoute } from 'vue-router';
+const route = useRoute()
+const tableName = ref('jiazhang')
+
+// Common method
+const getUUID=()=> {
+  return new Date().getTime();
+}
+
+const registerForm = ref({
+  xingbie: '',
+  xuehao: '',
+})
+const jiazhangxingbieLists = ref([])
+const jiazhangxuehaoLists = ref([])
+const init=()=>{
+  jiazhangxingbieLists.value = "Male,Female".split(',')
+  context?.$http({
+    url:`option/xuesheng/xuehao`,
+    method:'get'
+  }).then(res=>{
+    jiazhangxuehaoLists.value = res.data.data
+  })
+}
+// Multi-level linkage parameters
+// Register button
+const handleRegister = () => {
+  let url = tableName.value +"/register";
+  if((!registerForm.value.jiazhangzhanghao)){
+    context?.$toolUtil.message(`Parent account cannot be empty`,'error')
+    return false
+  }
+  if((!registerForm.value.mima)){
+    context?.$toolUtil.message(`Password cannot be empty`,'error')
+    return false
+  }
+  if(registerForm.value.mima!=registerForm.value.mima2){
+    context?.$toolUtil.message('The two passwords do not match','error')
+    return false
+  }
+  if((!registerForm.value.jiazhangxingming)){
+    context?.$toolUtil.message(`Parent name cannot be empty`,'error')
+    return false
+  }
+  if(registerForm.value.shoujihaoma&&(!context?.$toolUtil.isMobile(registerForm.value.shoujihaoma))){
+    context?.$toolUtil.message(`Mobile number should be in mobile format`,'error')
+    return false
+  }
+  context?.$http({
+    url:url,
+    method:'post',
+    data:registerForm.value
+  }).then(res=>{
+    context?.$toolUtil.message('Registration successful','success', obj=>{
+      context?.$router.push({
+        path: "/login"
+      });
+    })
+  })
+}
+// Return to login
+const close = () => {
+  context?.$router.push({
+    path: "/login"
+  });
+}
+init()
+onMounted(()=>{
+
+})
 </script>
+
 <style lang="scss" scoped>
 	.register_view {
         background-image: url("http://clfile.zggen.cn/20241024/479ba3ebda544acbba7fcbdd6353644a.png");

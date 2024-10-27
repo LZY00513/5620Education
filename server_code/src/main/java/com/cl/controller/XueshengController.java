@@ -67,9 +67,9 @@ public class XueshengController {
 	public R login(String username, String password, String captcha, HttpServletRequest request) {
 		XueshengEntity u = xueshengService.getOne(new QueryWrapper<XueshengEntity>().eq("xuehao", username));
         if(u==null || !u.getMima().equals(password)) {
-            return R.error("账号或密码不正确");
+            return R.error("id or password error");
         }
-		String token = tokenService.generateToken(u.getId(), username,"xuesheng",  "学生" );
+		String token = tokenService.generateToken(u.getId(), username,"xuesheng",  "student" );
 		return R.ok().put("token", token);
 	}
 
@@ -84,7 +84,7 @@ public class XueshengController {
     	//ValidatorUtils.validateEntity(xuesheng);
     	XueshengEntity u = xueshengService.getOne(new QueryWrapper<XueshengEntity>().eq("xuehao", xuesheng.getXuehao()));
 		if(u!=null) {
-			return R.error("注册用户已存在");
+			return R.error("user existed");
 		}
 		Long uId = new Date().getTime();
 		xuesheng.setId(uId);
@@ -99,7 +99,7 @@ public class XueshengController {
 	@RequestMapping("/logout")
 	public R logout(HttpServletRequest request) {
 		request.getSession().invalidate();
-		return R.ok("退出成功");
+		return R.ok("exit success");
 	}
 
 	/**
@@ -119,11 +119,11 @@ public class XueshengController {
     public R resetPass(String username, HttpServletRequest request){
     	XueshengEntity u = xueshengService.getOne(new QueryWrapper<XueshengEntity>().eq("xuehao", username));
     	if(u==null) {
-    		return R.error("账号不存在");
+    		return R.error("id not exist");
     	}
         u.setMima("123456");
         xueshengService.updateById(u);
-        return R.ok("密码已重置为：123456");
+        return R.ok("password overlapped as：123456");
     }
 
 
@@ -183,7 +183,7 @@ public class XueshengController {
         QueryWrapper< XueshengEntity> ew = new QueryWrapper< XueshengEntity>();
  		ew.allEq(MPUtil.allEQMapPre( xuesheng, "xuesheng"));
 		XueshengView xueshengView =  xueshengService.selectView(ew);
-		return R.ok("查询学生成功").put("data", xueshengView);
+		return R.ok("search student success").put("data", xueshengView);
     }
 
     /**
@@ -216,13 +216,13 @@ public class XueshengController {
     @RequestMapping("/save")
     public R save(@RequestBody XueshengEntity xuesheng, HttpServletRequest request){
         if(xueshengService.count(new QueryWrapper<XueshengEntity>().eq("xuehao", xuesheng.getXuehao()))>0) {
-            return R.error("学号已存在");
+            return R.error("sid existed");
         }
     	xuesheng.setId(new Date().getTime()+(long)Math.floor(Math.random()*1000));
     	//ValidatorUtils.validateEntity(xuesheng);
     	XueshengEntity u = xueshengService.getOne(new QueryWrapper<XueshengEntity>().eq("xuehao", xuesheng.getXuehao()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("user existed");
 		}
 		xuesheng.setId(new Date().getTime());
         xueshengService.save(xuesheng);
@@ -235,13 +235,13 @@ public class XueshengController {
     @RequestMapping("/add")
     public R add(@RequestBody XueshengEntity xuesheng, HttpServletRequest request){
         if(xueshengService.count(new QueryWrapper<XueshengEntity>().eq("xuehao", xuesheng.getXuehao()))>0) {
-            return R.error("学号已存在");
+            return R.error("sid existed");
         }
     	xuesheng.setId(new Date().getTime()+(long)Math.floor(Math.random()*1000));
     	//ValidatorUtils.validateEntity(xuesheng);
     	XueshengEntity u = xueshengService.getOne(new QueryWrapper<XueshengEntity>().eq("xuehao", xuesheng.getXuehao()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("user existed");
 		}
 		xuesheng.setId(new Date().getTime());
         xueshengService.save(xuesheng);

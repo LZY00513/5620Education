@@ -66,7 +66,7 @@ public class ZuoyexinxiController {
     @RequestMapping("/page")
     public R page(@RequestParam Map<String, Object> params,ZuoyexinxiEntity zuoyexinxi,
 		HttpServletRequest request){
-    	if(!request.getSession().getAttribute("role").toString().equals("管理员")) {
+    	if(!request.getSession().getAttribute("role").toString().equals("admin")) {
     		zuoyexinxi.setUserid((Long)request.getSession().getAttribute("userId"));
     	}
 		String tableName = request.getSession().getAttribute("tableName").toString();
@@ -117,7 +117,7 @@ public class ZuoyexinxiController {
         QueryWrapper< ZuoyexinxiEntity> ew = new QueryWrapper< ZuoyexinxiEntity>();
  		ew.allEq(MPUtil.allEQMapPre( zuoyexinxi, "zuoyexinxi"));
 		ZuoyexinxiView zuoyexinxiView =  zuoyexinxiService.selectView(ew);
-		return R.ok("查询作业信息成功").put("data", zuoyexinxiView);
+		return R.ok("search homework information success").put("data", zuoyexinxiView);
     }
 
     /**

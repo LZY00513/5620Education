@@ -12,29 +12,29 @@ const http = axios.create({
         'Content-Type': 'application/json; charset=utf-8'
     }
 })
-// 请求拦截
+// Request Interceptor
 http.interceptors.request.use(config => {
-    config.headers['Token'] = toolUtil.storageGet('frontToken') // 请求头带上token
+    config.headers['Token'] = toolUtil.storageGet('frontToken') // Attach token in request headers
     return config
 }, error => {
     return Promise.reject(error)
 })
-// 响应拦截
+// Response Interceptor
 http.interceptors.response.use(response => {
-    if (response.data && response.data.code === 401) { // 401, token失效
-		toolUtil.storageClear()
-		toolUtil.storageSet('toPath',window.history.state.current)
-		ElMessage.error(response.data.msg)
+    if (response.data && response.data.code === 401) { // 401, token expired
+        toolUtil.storageClear()
+        toolUtil.storageSet('toPath',window.history.state.current)
+        ElMessage.error(response.data.msg)
         router.push('/login')
-		return Promise.reject(response)
+        return Promise.reject(response)
     }
-	else if(response.data && response.data.code === 0){
-		return response
-	}else{
-		ElMessage.error(response.data.msg)
-		return Promise.reject(response)
-	}
-    
+    else if(response.data && response.data.code === 0){
+        return response
+    }else{
+        ElMessage.error(response.data.msg)
+        return Promise.reject(response)
+    }
+
 }, error => {
     return Promise.reject(error)
 })

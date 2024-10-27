@@ -103,6 +103,7 @@
 		</el-scrollbar>
 	</div>
 </template>
+
 <script setup>
 	import menu from '@/utils/menu'
 	import axios from 'axios'
@@ -266,7 +267,7 @@ const toggleChat = () => {
 		router.push('/login')
 	}
 	const loginOut = () => {
-		context?.$toolUtil.message('退出成功', 'success')
+		context?.$toolUtil.message('exit success', 'success')
 		context?.$toolUtil.storageClear()
 		router.replace('/index/home')
 		context?.$toolUtil.storageSet('menuIndex','0')
@@ -410,9 +411,9 @@ const toggleChat = () => {
 			margin: 10px 0 0;
 		}
 	}
-	
-	
-	
+
+
+
 
 	.contain_view {
 		margin: 0;
@@ -437,17 +438,17 @@ const toggleChat = () => {
 		// 一级菜单
 		:deep(.first-item) {
 			transition: all 0s;
-			
+
 			.el-sub-menu__title:hover{
 				background: none !important;
 			}
 			// 图标
-		
+
 			// 标题
 			.el-sub-menu__title,
 			span {
 			}
-		
+
 			//箭头
 			.el-sub-menu__icon-arrow {
 			}
@@ -456,7 +457,7 @@ const toggleChat = () => {
 		:deep(.is-active) {
 			color: #fff !important;
 		}
-		
+
 		// 悬浮
 		:deep(.first-item:hover) {
 			color: #fff !important;
@@ -476,11 +477,11 @@ const toggleChat = () => {
 		// 二级菜单
 		.second-item {
 		}
-		
+
 		// 选中
 		.is-active {
 		}
-		
+
 		// 悬浮
 		.second-item:hover {
 		}

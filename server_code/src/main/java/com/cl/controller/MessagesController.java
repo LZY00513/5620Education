@@ -110,7 +110,7 @@ public class MessagesController {
         QueryWrapper< MessagesEntity> ew = new QueryWrapper< MessagesEntity>();
  		ew.allEq(MPUtil.allEQMapPre( messages, "messages"));
 		MessagesView messagesView =  messagesService.selectView(ew);
-		return R.ok("查询留言板成功").put("data", messagesView);
+		return R.ok("search message success").put("data", messagesView);
     }
 
     /**

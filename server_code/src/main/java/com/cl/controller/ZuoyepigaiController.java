@@ -117,7 +117,7 @@ public class ZuoyepigaiController {
         QueryWrapper< ZuoyepigaiEntity> ew = new QueryWrapper< ZuoyepigaiEntity>();
  		ew.allEq(MPUtil.allEQMapPre( zuoyepigai, "zuoyepigai"));
 		ZuoyepigaiView zuoyepigaiView =  zuoyepigaiService.selectView(ew);
-		return R.ok("查询作业批改成功").put("data", zuoyepigaiView);
+		return R.ok("search homework grade success").put("data", zuoyepigaiView);
     }
 
     /**

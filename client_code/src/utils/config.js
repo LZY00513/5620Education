@@ -1,72 +1,66 @@
 const config = {
-    get() {
-        return {
-            url : process.env.VUE_APP_BASE_API_URL + process.env.VUE_APP_BASE_API + '/',
-            name: process.env.VUE_APP_BASE_API,
-			menuList:[
+	get() {
+		return {
+			url: process.env.VUE_APP_BASE_API_URL + process.env.VUE_APP_BASE_API + '/',
+			name: process.env.VUE_APP_BASE_API,
+			menuList: [
 				{
-					name: '作业信息管理',
+					name: 'Assignment Information Management',
 					icon: '',
-					child:[
-
+					child: [
 						{
-							name:'作业信息',
-							url:'/index/zuoyexinxiList'
+							name: 'Assignment Information',
+							url: '/index/zuoyexinxiList'
 						},
 					]
 				},
 				{
-					name: '新闻资讯管理',
+					name: 'News Information Management',
 					icon: '',
-					child:[
-
+					child: [
 						{
-							name:'公告信息',
-							url:'/index/newsList'
+							name: 'Announcement Information',
+							url: '/index/newsList'
 						},
 					]
 				},
 				{
-					name: '论坛交流',
+					name: 'Forum Communication',
 					icon: 'icon-common4',
-					child:[
-
+					child: [
 						{
-							name:'论坛交流',
-							url:'/index/forumList'
+							name: 'Forum Communication',
+							url: '/index/forumList'
 						},
 					]
 				},
 				{
-					name: '留言板管理',
+					name: 'Message Board Management',
 					icon: '',
-					child:[
-
+					child: [
 						{
-							name:'留言板',
-							url:'/index/messagesList'
+							name: 'Message Board',
+							url: '/index/messagesList'
 						},
 					]
 				},
 				{
-					name: '教学资源管理',
+					name: 'Educational Resources Management',
 					icon: '',
-					child:[
-
+					child: [
 						{
-							name:'教学资源',
-							url:'/index/jiaoxueziyuanList'
+							name: 'Educational Resources',
+							url: '/index/jiaoxueziyuanList'
 						},
 					]
 				},
 				{
-					name: '教师管理',
+					name: 'Teacher Management',
 					icon: '',
-					child:[
-
+					child: [
 						{
-							name:'教师',
-							url:'/index/jiaoshiList'
+							name: 'Teacher',
+							url: '/index/jiaoshiList'
 						},
 					]
 				},
@@ -82,12 +76,12 @@ const config = {
 					]
 				}
 			]
-        }
-    },
-    getProjectName(){
-        return {
-            projectName: "在线学习教育平台"
-        } 
-    }
+		}
+	},
+	getProjectName() {
+		return {
+			projectName: "Intelligent Education Platform"
+		}
+	}
 }
 export default config

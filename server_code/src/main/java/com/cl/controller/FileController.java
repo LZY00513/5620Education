@@ -49,7 +49,7 @@ public class FileController{
     @IgnoreAuth
 	public R upload(@RequestParam("file") MultipartFile file,String type) throws Exception {
 		if (file.isEmpty()) {
-			throw new EIException("上传文件不能为空");
+			throw new EIException("upload file is empty");
 		}
 		String fileExt = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
 		File path = new File(ResourceUtils.getURL("classpath:static").getPath());

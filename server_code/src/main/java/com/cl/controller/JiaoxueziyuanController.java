@@ -118,7 +118,7 @@ public class JiaoxueziyuanController {
         QueryWrapper< JiaoxueziyuanEntity> ew = new QueryWrapper< JiaoxueziyuanEntity>();
  		ew.allEq(MPUtil.allEQMapPre( jiaoxueziyuan, "jiaoxueziyuan"));
 		JiaoxueziyuanView jiaoxueziyuanView =  jiaoxueziyuanService.selectView(ew);
-		return R.ok("查询教学资源成功").put("data", jiaoxueziyuanView);
+		return R.ok("search education source success").put("data", jiaoxueziyuanView);
     }
 
     /**
