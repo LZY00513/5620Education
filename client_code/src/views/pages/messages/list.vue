@@ -1,237 +1,238 @@
 <template>
-	<div class="message_view" :style='{}'>
-		<div class="back_view" v-if="centerType">
-			<el-button class="back_btn" @click="backClick" type="primary">返回</el-button>
-		</div>
-		<div class="section_title">
-            <span>{{formName}}</span>
-		</div>
-		<div class="messages_list">
-			<div class="add_view">
-				<el-button class="add_btn" @click="addClick" v-if="btnAuth('messages','新增')">发表</el-button>
-			</div>
-			<div class="messages" v-for="(item,index) in list" :key="index" @mouseenter="messageEnter(index)"
-				@mouseleave="messageLeave">
-				<div class="messages_user">
-					<img v-if="item.avatarurl" class="messages_user_avatar"
-						:src="$config.url + item.avatarurl.split(',')[0]" alt="">
-					<img v-else class="messages_user_avatar" src="@/assets/avatar.png" alt="">
-					<span class="messages_user_name">用户：{{item.username}}</span>
-				</div>
-				<div class="messages_content" v-html="item.content"></div>
-				<div class="messages_reply_view" v-if="item.reply">
-					<el-divider content-position="left">回复</el-divider>
-					<div class="meaages_reply" v-html="item.reply"></div>
-				</div>
-				<div class="messages_del_view">
-					<div class="messages_del" @click="delClick(item.id)"
-						v-if="messageShowIndex==index&&item.userid==userid">删除</div>
-				</div>
-				<el-divider v-if="index!=list.length - 1" />
-			</div>
-		</div>
-		<el-pagination
-			background 
-			:layout="layouts.join(',')"
-			:total="total" 
-			:page-size="listQuery.limit"
-			prev-text="上一页"
-			next-text="下一页"
-			:hide-on-single-page="false"
-			:style='{}'
-			@size-change="sizeChange"
-			@current-change="currentChange" 
-			@prev-click="prevClick"
-			@next-click="nextClick"  />
-		<el-dialog v-model="formVisible" :title="'发表'" width="50%" destroy-on-close>
-			<el-form class="add_form" :model="form" label-width="80px">
-				<el-row>
-					<el-col :span="24">
-						<el-form-item prop="content" label="内容">
-							<editor :value="form.content"
-								placeholder="请输入内容" class="editor" @change="contentChange"></editor>
-						</el-form-item>
-					</el-col>
-				</el-row>
-			</el-form>
-			<template #footer>
+  <div class="message_view" :style='{}'>
+    <div class="back_view" v-if="centerType">
+      <el-button class="back_btn" @click="backClick" type="primary">Return</el-button>
+    </div>
+    <div class="section_title">
+      <span>{{formName}}</span>
+    </div>
+    <div class="messages_list">
+      <div class="add_view">
+        <el-button class="add_btn" @click="addClick" v-if="btnAuth('messages','Add')">Post</el-button>
+      </div>
+      <div class="messages" v-for="(item,index) in list" :key="index" @mouseenter="messageEnter(index)"
+           @mouseleave="messageLeave">
+        <div class="messages_user">
+          <img v-if="item.avatarurl" class="messages_user_avatar"
+               :src="$config.url + item.avatarurl.split(',')[0]" alt="">
+          <img v-else class="messages_user_avatar" src="@/assets/avatar.png" alt="">
+          <span class="messages_user_name">User: {{item.username}}</span>
+        </div>
+        <div class="messages_content" v-html="item.content"></div>
+        <div class="messages_reply_view" v-if="item.reply">
+          <el-divider content-position="left">Reply</el-divider>
+          <div class="meaages_reply" v-html="item.reply"></div>
+        </div>
+        <div class="messages_del_view">
+          <div class="messages_del" @click="delClick(item.id)"
+               v-if="messageShowIndex==index&&item.userid==userid">Delete</div>
+        </div>
+        <el-divider v-if="index!=list.length - 1" />
+      </div>
+    </div>
+    <el-pagination
+        background
+        :layout="layouts.join(',')"
+        :total="total"
+        :page-size="listQuery.limit"
+        prev-text="Previous"
+        next-text="Next"
+        :hide-on-single-page="false"
+        :style='{}'
+        @size-change="sizeChange"
+        @current-change="currentChange"
+        @prev-click="prevClick"
+        @next-click="nextClick"  />
+    <el-dialog v-model="formVisible" :title="'Post'" width="50%" destroy-on-close>
+      <el-form class="add_form" :model="form" label-width="80px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item prop="content" label="Content">
+              <editor :value="form.content"
+                      placeholder="Please enter content" class="editor" @change="contentChange"></editor>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
 				<span class="formModel_btn_box">
-					<el-button class="formModel_cancel" @click="formVisible=false">关闭</el-button>
-					<el-button class="formModel_confirm" type="primary" @click="save">发表</el-button>
+					<el-button class="formModel_cancel" @click="formVisible=false">Close</el-button>
+					<el-button class="formModel_confirm" type="primary" @click="save">Post</el-button>
 				</span>
-			</template>
-		</el-dialog>
-	</div>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup>
-	import {
-		ref,
-		nextTick,
-		getCurrentInstance
-	} from 'vue';
-	import {
-		ElMessageBox
-	} from 'element-plus'
-	import {
-		useRoute,
-		useRouter
-	} from 'vue-router'
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	//基础信息
-	const tableName = 'messages'
-	const formName = '留言板'
-	const router = useRouter()
-	const route = useRoute()
-	//基础信息
-	//权限验证
-	const btnAuth = (e, a) => {
-		return context?.$toolUtil.isAuth(e, a)
-	}
-	const list = ref([])
-	const listLoading = ref(false)
-	const listQuery = ref({
-		page: 1,
-		limit: 20,
-		sort: 'addtime',
-		order: 'desc'
-	})
-	const searchQuery = ref({})
-	const total = ref(0)
-	const userid = ref(0)
-	const searchClick = () => {
-		listQuery.value.page = 1
-		getList()
-	}
-	const getList = () => {
-		listLoading.value = true
-		let params = JSON.parse(JSON.stringify(listQuery.value))
-		context?.$http({
-			url: `messages/list`,
-			method: 'get',
-			params: params
-		}).then(res => {
-			listLoading.value = false
-			list.value = res.data.data.list
-			total.value = res.data.data.total
-		})
-	}
-	//分页
-	const layouts = ref(["total","prev","pager","next","sizes","jumper"])
-	const sizeChange = (size) => {
-		listQuery.value.limit = size
-		getList()
-	}
-	const currentChange = (page) => {
-		listQuery.value.page = page
-		getList()
-	}
-	const prevClick = () => {
-		listQuery.value.page = listQuery.value.page - 1
-		getList()
-	}
-	const nextClick = () => {
-		listQuery.value.page = listQuery.value.page + 1
-		getList()
-	}
-	//分页
-	//判断是否从个人中心跳转
-	const centerType = ref(false)
-	//返回
-	const backClick = () => {
-		router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
-	}
-	const form = ref({
-		content: '',
-		userid: '',
-		username: '',
-		avatarurl: ''
-	})
-	const formVisible = ref(false)
-	const resetForm = () => {
-		form.value = {
-			content: '',
-			userid: context?.$toolUtil.storageGet('userid'),
-			username: context?.$toolUtil.storageGet('frontName'),
-			avatarurl: context?.$toolUtil.storageGet('headportrait') ? context?.$toolUtil.storageGet('headportrait') : ''
-		}
-	}
-	//发表
-	const addClick = () => {
-		resetForm()
-		formVisible.value = true
-	}
-	//富文本回调
-	const contentChange = (e) => {
-		form.value.content = e
-	}
-	const save = () => {
-		if (form.value.content == '') {
-			context?.$toolUtil.message('请输入内容', 'error')
-			return false
-		}
-		let sensitiveWords = "";
-		let sensitiveWordsArr = [];
-		if(sensitiveWords) {
-			sensitiveWordsArr = sensitiveWords.split(",");
-		}
-		for(var i=0; i<sensitiveWordsArr.length; i++){
-			//全局替换
-			var reg = new RegExp(sensitiveWordsArr[i],"g");
-			//判断内容中是否包括敏感词
-			if (form.value.content.indexOf(sensitiveWordsArr[i]) > -1) {
-				// 将敏感词替换为 **
-				form.value.content = form.value.content.replace(reg,"**");
-			}
-		}
-		context?.$http({
-			url: 'messages/add',
-			method: 'post',
-			data: form.value
-		}).then(res => {
-			context?.$toolUtil.message(`发表成功`, 'success', () => {
-				getList()
-				formVisible.value = false
-			})
-		})
-	}
-	//删除
-	const delClick = (id = null) => {
-		if (id) {
-			ElMessageBox.confirm(`是否删除选中留言`, '提示', {
-				confirmButtonText: '是',
-				cancelButtonText: '否',
-				type: 'warning',
-			}).then(() => {
-				context?.$http({
-					url: `messages/delete`,
-					method: 'post',
-					data: [id]
-				}).then(res => {
-					context?.$toolUtil.message('删除成功', 'success', () => {
-						getList()
-					})
-				})
-			})
-		}
-	}
-	//控制删除显示
-	const messageShowIndex = ref(-1)
-	const messageEnter = (e) => {
-		messageShowIndex.value = e
-	}
-	const meeageLeave = () => {
-		messageShowIndex.value = -1
-	}
-	const init = () => {
-		if (route.query.centerType) {
-			centerType.value = true
-		}
-		userid.value = context?.$toolUtil.storageGet('userid')
-		getList()
-	}
-	init()
+import {
+  ref,
+  nextTick,
+  getCurrentInstance
+} from 'vue';
+import {
+  ElMessageBox
+} from 'element-plus'
+import {
+  useRoute,
+  useRouter
+} from 'vue-router'
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+// Base information
+const tableName = 'messages'
+const formName = 'Message Board'
+const router = useRouter()
+const route = useRoute()
+// Base information
+// Permission validation
+const btnAuth = (e, a) => {
+  return context?.$toolUtil.isAuth(e, a)
+}
+const list = ref([])
+const listLoading = ref(false)
+const listQuery = ref({
+  page: 1,
+  limit: 20,
+  sort: 'addtime',
+  order: 'desc'
+})
+const searchQuery = ref({})
+const total = ref(0)
+const userid = ref(0)
+const searchClick = () => {
+  listQuery.value.page = 1
+  getList()
+}
+const getList = () => {
+  listLoading.value = true
+  let params = JSON.parse(JSON.stringify(listQuery.value))
+  context?.$http({
+    url: `messages/list`,
+    method: 'get',
+    params: params
+  }).then(res => {
+    listLoading.value = false
+    list.value = res.data.data.list
+    total.value = res.data.data.total
+  })
+}
+// Pagination
+const layouts = ref(["total","prev","pager","next","sizes","jumper"])
+const sizeChange = (size) => {
+  listQuery.value.limit = size
+  getList()
+}
+const currentChange = (page) => {
+  listQuery.value.page = page
+  getList()
+}
+const prevClick = () => {
+  listQuery.value.page = listQuery.value.page - 1
+  getList()
+}
+const nextClick = () => {
+  listQuery.value.page = listQuery.value.page + 1
+  getList()
+}
+// Pagination
+// Determine if redirected from personal center
+const centerType = ref(false)
+// Return
+const backClick = () => {
+  router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
+}
+const form = ref({
+  content: '',
+  userid: '',
+  username: '',
+  avatarurl: ''
+})
+const formVisible = ref(false)
+const resetForm = () => {
+  form.value = {
+    content: '',
+    userid: context?.$toolUtil.storageGet('userid'),
+    username: context?.$toolUtil.storageGet('frontName'),
+    avatarurl: context?.$toolUtil.storageGet('headportrait') ? context?.$toolUtil.storageGet('headportrait') : ''
+  }
+}
+// Post
+const addClick = () => {
+  resetForm()
+  formVisible.value = true
+}
+// Rich text callback
+const contentChange = (e) => {
+  form.value.content = e
+}
+const save = () => {
+  if (form.value.content == '') {
+    context?.$toolUtil.message('Please enter content', 'error')
+    return false
+  }
+  let sensitiveWords = "";
+  let sensitiveWordsArr = [];
+  if(sensitiveWords) {
+    sensitiveWordsArr = sensitiveWords.split(",");
+  }
+  for(var i=0; i<sensitiveWordsArr.length; i++){
+    // Global replacement
+    var reg = new RegExp(sensitiveWordsArr[i],"g");
+    // Check if content includes sensitive words
+    if (form.value.content.indexOf(sensitiveWordsArr[i]) > -1) {
+      // Replace sensitive words with **
+      form.value.content = form.value.content.replace(reg,"**");
+    }
+  }
+  context?.$http({
+    url: 'messages/add',
+    method: 'post',
+    data: form.value
+  }).then(res => {
+    context?.$toolUtil.message(`Post successful`, 'success', () => {
+      getList()
+      formVisible.value = false
+    })
+  })
+}
+// Delete
+const delClick = (id = null) => {
+  if (id) {
+    ElMessageBox.confirm(`Are you sure you want to delete the selected message?`, 'Tip', {
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      type: 'warning',
+    }).then(() => {
+      context?.$http({
+        url: `messages/delete`,
+        method: 'post',
+        data: [id]
+      }).then(res => {
+        context?.$toolUtil.message('Delete successful', 'success', () => {
+          getList()
+        })
+      })
+    })
+  }
+}
+// Control delete visibility
+const messageShowIndex = ref(-1)
+const messageEnter = (e) => {
+  messageShowIndex.value = e
+}
+const meeageLeave = () => {
+  messageShowIndex.value = -1
+}
+const init = () => {
+  if (route.query.centerType) {
+    centerType.value = true
+  }
+  userid.value = context?.$toolUtil.storageGet('userid')
+  getList()
+}
+init()
 </script>
+
 
 <style lang="scss" scoped>
 	// 返回盒子

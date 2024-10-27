@@ -1,97 +1,100 @@
 <template>
-	<div class="home">
-		<div class="index_top">
-			<div class="index_top_title">在线学习教育平台</div>
-			<div class="index_top_right">
-				<template v-if="Token">
-					<div v-if="date&&weather" class="weather_time_view">
-						<div class="weather">
-							<div class="city">{{weather.city}}</div>
-							<div class="wea">
-								{{weather.day.wea}} | {{weather.day.tem}}℃
-							</div>
-						</div>
-						<div class="time">
-							<div class="date">{{date}}</div>
-							<div class="timer">{{timer}}</div>
-						</div>
-					</div>
-				</template>
-				<el-button v-if="!Token" type="success" icon="User" circle @click="loginClick">
-					登录
-				</el-button>
-				<div class="user" v-if="Token">
-					<el-dropdown class="avatar-container" trigger="hover">
-						<div class="avatar-wrapper">
-							<img class="user-avatar" :src="store.getters['user/avatar']" style="width: 50px">
-							<div class="nickname">{{$toolUtil.storageGet("frontName")}}</div>
-							<el-icon class="el-icon-arrow-down">
-								<arrow-down />
-							</el-icon>
-						</div>
-						<template #dropdown>
-							<el-dropdown-menu class="user-dropDown" slot="dropdown">
-								<el-dropdown-item @click="menuHandler('center')" class="center">
-									<span>个人中心</span>
-								</el-dropdown-item>
-								<el-dropdown-item @click="loginOut" class="loginOut">
-									<span>退出登录</span>
-								</el-dropdown-item>
-							</el-dropdown-menu>
-						</template>
-					</el-dropdown>
-				</div>
-			</div>
-		</div>
-		<el-scrollbar class="contain_view">
-			<el-scrollbar wrap-class="scrollbar-wrapper" class="menu_scrollbar">
-				<el-menu :default-openeds="[]" :unique-opened="true" :default-active="menuIndex"
-					 class="menu_view" mode="horizontal" :ellipsis="false" @select="menuChange" :key="menuIndex">
-					<el-menu-item class="first-item" index="0" @click="menuHandler('/')">
-						<template #title>
-							<span>首页</span>
-						</template>
-					</el-menu-item>
-					<template v-for="(menu,index) in menuList" :key="menu.menu">
-						<el-sub-menu v-if="menu.child.length>1" :index="index+2+''" class="first-item">
-							<template #title>
-								<span>{{ menu.name }}</span>
-							</template>
-							<el-menu-item class="second-item" v-for=" (child,sort) in menu.child" :key="sort"
-								:index="(index+2)+'-'+sort" @click="menuHandler(child.url)">{{ child.name }}
-							</el-menu-item>
-						</el-sub-menu>
-						<el-menu-item v-else :index="index+2+''" class="first-item" @click="menuHandler(menu.child[0].url)">
-							<template #title>
-								<span>{{menu.child[0].name}}</span>
-							</template>
-						</el-menu-item>
-					</template>
-				</el-menu>
-			</el-scrollbar>
-			<div class="rotation_view" >
-				<mySwiper :type="3" :data="rotationList" :autoHeight="false" :autoplay="true"
-					:loop="false" :navigation="true" :pagination="false" 
-					:paginationType="1" :scrollbar="false" :slidesPerView="1" 
-					:spaceBetween="20" :centeredSlides="false"
-					:freeMode="false" :effectType="9"
-					:direction="horizontal">
-					<template #default="scope">
-						<img :style='{}' :src="scope.row.value?$config.url + scope.row.value:''" @click="carouselClick(scope.row.url)">
-					</template>
-				</mySwiper>
-			</div>
-			<router-view />
-			<el-backtop :right="100" :bottom="100" />
-			<div class="bottom_view">
-				<img class="bottom_img" src="http://chy2.gdnxeco.com/20230912/0d5ae5e141c14b06a52a7c4c2f8ea4cf.jpg" alt="">
-				<div class="bottom_company"></div>
-				<div class="bottom_record"></div>
-				<div class="bottom_desc"></div>
-			</div>
-		</el-scrollbar>
-	</div>
+  <div>
+    <div class="home">
+      <div class="index_top">
+        <div class="index_top_title">Smart Education Platform</div>
+        <div class="index_top_right">
+          <template v-if="Token">
+            <div v-if="date&&weather" class="weather_time_view">
+              <div class="weather">
+                <div class="city">{{weather.city}}</div>
+                <div class="wea">
+                  {{weather.day.wea}} | {{weather.day.tem}}℃
+                </div>
+              </div>
+              <div class="time">
+                <div class="date">{{date}}</div>
+                <div class="timer">{{timer}}</div>
+              </div>
+            </div>
+          </template>
+          <el-button v-if="!Token" type="success" icon="User" circle @click="loginClick">
+            Login
+          </el-button>
+          <div class="user" v-if="Token">
+            <el-dropdown class="avatar-container" trigger="hover">
+              <div class="avatar-wrapper">
+                <img class="user-avatar" :src="store.getters['user/avatar']" style="width: 50px">
+                <div class="nickname">{{$toolUtil.storageGet("frontName")}}</div>
+                <el-icon class="el-icon-arrow-down">
+                  <arrow-down />
+                </el-icon>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu class="user-dropDown" slot="dropdown">
+                  <el-dropdown-item @click="menuHandler('center')" class="center">
+                    <span>Personal Center</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="loginOut" class="loginOut">
+                    <span>Logout</span>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </div>
+      </div>
+      <el-scrollbar class="contain_view">
+        <el-scrollbar wrap-class="scrollbar-wrapper" class="menu_scrollbar">
+          <el-menu :default-openeds="[]" :unique-opened="true" :default-active="menuIndex"
+                   class="menu_view" mode="horizontal" :ellipsis="false" @select="menuChange" :key="menuIndex">
+            <el-menu-item class="first-item" index="0" @click="menuHandler('/')">
+              <template #title>
+                <span>Home</span>
+              </template>
+            </el-menu-item>
+            <template v-for="(menu,index) in menuList" :key="menu.menu">
+              <el-sub-menu v-if="menu.child.length>1" :index="index+2+''" class="first-item">
+                <template #title>
+                  <span>{{ menu.name }}</span>
+                </template>
+                <el-menu-item class="second-item" v-for=" (child,sort) in menu.child" :key="sort"
+                              :index="(index+2)+'-'+sort" @click="menuHandler(child.url)">{{ child.name }}
+                </el-menu-item>
+              </el-sub-menu>
+              <el-menu-item v-else :index="index+2+''" class="first-item" @click="menuHandler(menu.child[0].url)">
+                <template #title>
+                  <span>{{menu.child[0].name}}</span>
+                </template>
+              </el-menu-item>
+            </template>
+          </el-menu>
+        </el-scrollbar>
+        <div class="rotation_view">
+          <mySwiper :type="3" :data="rotationList" :autoHeight="false" :autoplay="true"
+                    :loop="false" :navigation="true" :pagination="false"
+                    :paginationType="1" :scrollbar="false" :slidesPerView="1"
+                    :spaceBetween="20" :centeredSlides="false"
+                    :freeMode="false" :effectType="9"
+                    :direction="horizontal">
+            <template #default="scope">
+              <img :style='{}' :src="scope.row.value?$config.url + scope.row.value:''" @click="carouselClick(scope.row.url)">
+            </template>
+          </mySwiper>
+        </div>
+        <router-view />
+        <el-backtop :right="100" :bottom="100" />
+        <div class="bottom_view">
+          <img class="bottom_img" src="http://chy2.gdnxeco.com/20230912/0d5ae5e141c14b06a52a7c4c2f8ea4cf.jpg" alt="">
+          <div class="bottom_company"></div>
+          <div class="bottom_record"></div>
+          <div class="bottom_desc"></div>
+        </div>
+      </el-scrollbar>
+    </div>
+  </div>
 </template>
+
 <script setup>
 	import menu from '@/utils/menu'
 	import axios from 'axios'
@@ -219,7 +222,7 @@
 		router.push('/login')
 	}
 	const loginOut = () => {
-		context?.$toolUtil.message('退出成功', 'success')
+		context?.$toolUtil.message('exit success', 'success')
 		context?.$toolUtil.storageClear()
 		router.replace('/index/home')
 		context?.$toolUtil.storageSet('menuIndex','0')
@@ -363,9 +366,9 @@
 			margin: 10px 0 0;
 		}
 	}
-	
-	
-	
+
+
+
 
 	.contain_view {
 		margin: 0;
@@ -390,17 +393,17 @@
 		// 一级菜单
 		:deep(.first-item) {
 			transition: all 0s;
-			
+
 			.el-sub-menu__title:hover{
 				background: none !important;
 			}
 			// 图标
-		
+
 			// 标题
 			.el-sub-menu__title,
 			span {
 			}
-		
+
 			//箭头
 			.el-sub-menu__icon-arrow {
 			}
@@ -409,7 +412,7 @@
 		:deep(.is-active) {
 			color: #fff !important;
 		}
-		
+
 		// 悬浮
 		:deep(.first-item:hover) {
 			color: #fff !important;
@@ -429,11 +432,11 @@
 		// 二级菜单
 		.second-item {
 		}
-		
+
 		// 选中
 		.is-active {
 		}
-		
+
 		// 悬浮
 		.second-item:hover {
 		}

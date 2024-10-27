@@ -1,223 +1,224 @@
 <template>
-	<div class="list-page" :style='{}'>
-		<div class="bread_view">
-			<el-breadcrumb separator="/" class="breadcrumb">
-				<el-breadcrumb-item class="first_breadcrumb" :to="{ path: '/' }">首页</el-breadcrumb-item>
-				<el-breadcrumb-item class="second_breadcrumb" v-for="(item,index) in breadList" :key="index">{{item.name}}</el-breadcrumb-item>
-			</el-breadcrumb>
-		</div>
-		<div class="back_view" v-if="centerType">
-			<el-button class="back_btn" @click="backClick" type="primary">返回</el-button>
-		</div>
-		<el-form :inline="true" :model="searchQuery" class="list_search">
-			<div class="search_view">
-				<div class="search_label">
-					作业名称：
-				</div>
-				<div class="search_box">
-					<el-input class="search_inp" v-model="searchQuery.zuoyemingcheng" placeholder="作业名称"
-						clearable>
-					</el-input>
-				</div>
-			</div>
-			<div class="search_btn_view">
-				<el-button class="search_btn" type="primary" @click="searchClick">搜索</el-button>
-				<el-button class="add_btn" type="success" v-if="btnAuth('tijiaozuoye','新增')" @click="addClick">新增</el-button>
-			</div>
-		</el-form>
-		<div class="page_list">
-			<div class="data_box">
-				<div class="data_view">
-					<el-table v-loading="listLoading" class="data_table" :data="list" border :row-style="{'cursor':'pointer'}"
-						@row-click="tableDetailClick" :stripe='true'>
-						<el-table-column :resizable='true' align="left" header-align="left" type="selection" width="55" />
-						<el-table-column label="序号" width="120" :resizable='true' align="left" header-align="left">
-							<template #default="scope">{{ (listQuery.page-1)*listQuery.limit+scope.$index + 1}}</template>
-						</el-table-column>
-						<el-table-column label="作业名称" :resizable='true' align="left" header-align="left">
-							<template #default="scope">
-								{{scope.row.zuoyemingcheng}}
-							</template>
-						</el-table-column>
-						<el-table-column label="教师工号" :resizable='true' align="left" header-align="left">
-							<template #default="scope">
-								{{scope.row.jiaoshigonghao}}
-							</template>
-						</el-table-column>
-						<el-table-column label="教师姓名" :resizable='true' align="left" header-align="left">
-							<template #default="scope">
-								{{scope.row.jiaoshixingming}}
-							</template>
-						</el-table-column>
-						<el-table-column label="作业答案" :resizable='true' align="left" header-align="left">
-							<template #default="scope">
-								<el-button v-if="scope.row.zuoyedaan" type="text" size="small" @click.stop="download(scope.row.zuoyedaan)">下载</el-button>
-								<el-button v-else disabled type="text" size="small">无</el-button>
-							</template>
-						</el-table-column>
-						<el-table-column label="学号" :resizable='true' align="left" header-align="left">
-							<template #default="scope">
-								{{scope.row.xuehao}}
-							</template>
-						</el-table-column>
-						<el-table-column label="学生姓名" :resizable='true' align="left" header-align="left">
-							<template #default="scope">
-								{{scope.row.xueshengxingming}}
-							</template>
-						</el-table-column>
-						<el-table-column label="提交时间" :resizable='true' align="left" header-align="left">
-							<template #default="scope">
-								{{scope.row.tijiaoshijian}}
-							</template>
-						</el-table-column>
-					</el-table>
-				</div>
-				<el-pagination
-					background 
-					:layout="layouts.join(',')"
-					:total="total" 
-					:page-size="listQuery.limit"
-					prev-text="上一页"
-					next-text="下一页"
-					:hide-on-single-page="false"
-					:style='{}'
-					@size-change="sizeChange"
-					@current-change="currentChange" 
-					@prev-click="prevClick"
-					@next-click="nextClick"  />
-			</div>
-		</div>
-		<el-dialog v-model="preViewVisible" :title="'查看大图'" width="60%" destroy-on-close>
-			<img :src="preViewUrl" style="width: 100%;" alt="">
-		</el-dialog>
-	</div>
+  <div class="list-page" :style='{}'>
+    <div class="bread_view">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item class="first_breadcrumb" :to="{ path: '/' }">Home</el-breadcrumb-item>
+        <el-breadcrumb-item class="second_breadcrumb" v-for="(item,index) in breadList" :key="index">{{item.name}}</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="back_view" v-if="centerType">
+      <el-button class="back_btn" @click="backClick" type="primary">Back</el-button>
+    </div>
+    <el-form :inline="true" :model="searchQuery" class="list_search">
+      <div class="search_view">
+        <div class="search_label">
+          Assignment Name:
+        </div>
+        <div class="search_box">
+          <el-input class="search_inp" v-model="searchQuery.zuoyemingcheng" placeholder="Assignment Name"
+                    clearable>
+          </el-input>
+        </div>
+      </div>
+      <div class="search_btn_view">
+        <el-button class="search_btn" type="primary" @click="searchClick">Search</el-button>
+        <el-button class="add_btn" type="success" v-if="btnAuth('tijiaozuoye','新增')" @click="addClick">Add</el-button>
+      </div>
+    </el-form>
+    <div class="page_list">
+      <div class="data_box">
+        <div class="data_view">
+          <el-table v-loading="listLoading" class="data_table" :data="list" border :row-style="{'cursor':'pointer'}"
+                    @row-click="tableDetailClick" :stripe='true'>
+            <el-table-column :resizable='true' align="left" header-align="left" type="selection" width="55" />
+            <el-table-column label="Serial Number" width="120" :resizable='true' align="left" header-align="left">
+              <template #default="scope">{{ (listQuery.page-1)*listQuery.limit+scope.$index + 1}}</template>
+            </el-table-column>
+            <el-table-column label="Assignment Name" :resizable='true' align="left" header-align="left">
+              <template #default="scope">
+                {{scope.row.zuoyemingcheng}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Teacher ID" :resizable='true' align="left" header-align="left">
+              <template #default="scope">
+                {{scope.row.jiaoshigonghao}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Teacher Name" :resizable='true' align="left" header-align="left">
+              <template #default="scope">
+                {{scope.row.jiaoshixingming}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Assignment Answer" :resizable='true' align="left" header-align="left">
+              <template #default="scope">
+                <el-button v-if="scope.row.zuoyedaan" type="text" size="small" @click.stop="download(scope.row.zuoyedaan)">Download</el-button>
+                <el-button v-else disabled type="text" size="small">No</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="Student ID" :resizable='true' align="left" header-align="left">
+              <template #default="scope">
+                {{scope.row.xuehao}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Student Name" :resizable='true' align="left" header-align="left">
+              <template #default="scope">
+                {{scope.row.xueshengxingming}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Submission Time" :resizable='true' align="left" header-align="left">
+              <template #default="scope">
+                {{scope.row.tijiaoshijian}}
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <el-pagination
+            background
+            :layout="layouts.join(',')"
+            :total="total"
+            :page-size="listQuery.limit"
+            prev-text="Previous Page"
+            next-text="Next Page"
+            :hide-on-single-page="false"
+            :style='{}'
+            @size-change="sizeChange"
+            @current-change="currentChange"
+            @prev-click="prevClick"
+            @next-click="nextClick"  />
+      </div>
+    </div>
+    <el-dialog v-model="preViewVisible" :title="'View Large Image'" width="60%" destroy-on-close>
+      <img :src="preViewUrl" style="width: 100%;" alt="">
+    </el-dialog>
+  </div>
 </template>
 
 <script setup>
-	import {
-		ref,
-		getCurrentInstance,
-		nextTick,
-        computed,
-	} from 'vue';
-	import {
-		useRoute,
-		useRouter
-	} from 'vue-router';
-    import {
-        useStore
-    } from 'vuex';
-    const store = useStore()
-    const user = computed(()=>store.getters['user/session'])
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	const router = useRouter()
-	const route = useRoute()
-	//基础信息
-	const tableName = 'tijiaozuoye'
-	const formName = '提交作业'
-	//基础信息
-	const breadList = ref([{
-		name: formName
-	}])
-	const list = ref([])
-	const listQuery = ref({
-		page: 1,
-		limit: 20,
-	})
-	const total = ref(0)
-	const listLoading = ref(false)
-	//权限验证
-	const btnAuth = (e,a)=>{
-		if(centerType.value){
-			return context?.$toolUtil.isBackAuth(e,a)
-		}else{
-			return context?.$toolUtil.isAuth(e,a)
-		}
-	}
-	const addClick = () => {
-		router.push('/index/tijiaozuoyeAdd')
-	}
-	//判断是否从个人中心跳转
-	const centerType = ref(false)
-	//返回
-	const backClick = () => {
-		router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
-	}
-	//搜索
-	const searchQuery = ref({})
-	//下拉列表
-	const searchClick = () => {
-		listQuery.value.page = 1
-		getList()
-	}
-	//分页
-	const layouts = ref(["total","prev","pager","next","sizes","jumper"])
-	const sizeChange = (size) => {
-		listQuery.value.limit = size
-		getList()
-	}
-	const currentChange = (page) => {
-		listQuery.value.page = page
-		getList()
-	}
-	const prevClick = () => {
-		listQuery.value.page = listQuery.value.page - 1
-		getList()
-	}
-	const nextClick = () => {
-		listQuery.value.page = listQuery.value.page + 1
-		getList()
-	}
-	//分页
-	//列表
-	const getList = () => {
-		listLoading.value = true
-		let params = JSON.parse(JSON.stringify(listQuery.value))
-		if(searchQuery.value.zuoyemingcheng&&searchQuery.value.zuoyemingcheng!=''){
-			params.zuoyemingcheng = '%' + searchQuery.value.zuoyemingcheng + '%'
-		}
-		context?.$http({
-			url: `${tableName}/${centerType.value?'page':'list'}`,
-			method: 'get',
-			params: params
-		}).then(res => {
-			listLoading.value = false
-			list.value = res.data.data.list
-			total.value = Number(res.data.data.total)
-		})
-	}
-	const tableDetailClick = (row) => {
-		router.push(`${tableName}Detail?id=` + row.id + (centerType.value?'&&centerType=1':''))
-	}
-	//下载文件
-	const download = (file) =>{
-		if(!file){
-			context?.$toolUtil.message('文件不存在','error')
-		}
-		const a = document.createElement('a');
-		a.style.display = 'none';
-		a.setAttribute('target', '_blank');
-		file && a.setAttribute('download', file);
-		a.href = context?.$config.url + file;
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-	}
-	// 查看大图
-	const preViewUrl = ref('')
-	const preViewVisible = ref(false)
-	const preViewClick = (url) =>{
-		preViewUrl.value = url
-		preViewVisible.value = true
-	}
-	const init = () => {
-		if(route.query.centerType){
-			centerType.value = true
-		}
-		getList()
-	}
-	init()
+import {
+  ref,
+  getCurrentInstance,
+  nextTick,
+  computed,
+} from 'vue';
+import {
+  useRoute,
+  useRouter
+} from 'vue-router';
+import {
+  useStore
+} from 'vuex';
+const store = useStore()
+const user = computed(()=>store.getters['user/session'])
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const router = useRouter()
+const route = useRoute()
+// Basic Information
+const tableName = 'tijiaozuoye'
+const formName = 'Submit Assignment'
+// Basic Information
+const breadList = ref([{
+  name: formName
+}])
+const list = ref([])
+const listQuery = ref({
+  page: 1,
+  limit: 20,
+})
+const total = ref(0)
+const listLoading = ref(false)
+// Permission Verification
+const btnAuth = (e,a)=>{
+  if(centerType.value){
+    return context?.$toolUtil.isBackAuth(e,a)
+  }else{
+    return context?.$toolUtil.isAuth(e,a)
+  }
+}
+const addClick = () => {
+  router.push('/index/tijiaozuoyeAdd')
+}
+// Determine if Jumped from Personal Center
+const centerType = ref(false)
+// Back
+const backClick = () => {
+  router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
+}
+// Search
+const searchQuery = ref({})
+// Dropdown List
+const searchClick = () => {
+  listQuery.value.page = 1
+  getList()
+}
+// Pagination
+const layouts = ref(["total","prev","pager","next","sizes","jumper"])
+const sizeChange = (size) => {
+  listQuery.value.limit = size
+  getList()
+}
+const currentChange = (page) => {
+  listQuery.value.page = page
+  getList()
+}
+const prevClick = () => {
+  listQuery.value.page = listQuery.value.page - 1
+  getList()
+}
+const nextClick = () => {
+  listQuery.value.page = listQuery.value.page + 1
+  getList()
+}
+// Pagination
+// List
+const getList = () => {
+  listLoading.value = true
+  let params = JSON.parse(JSON.stringify(listQuery.value))
+  if(searchQuery.value.zuoyemingcheng&&searchQuery.value.zuoyemingcheng!=''){
+    params.zuoyemingcheng = '%' + searchQuery.value.zuoyemingcheng + '%'
+  }
+  context?.$http({
+    url: `${tableName}/${centerType.value?'page':'list'}`,
+    method: 'get',
+    params: params
+  }).then(res => {
+    listLoading.value = false
+    list.value = res.data.data.list
+    total.value = Number(res.data.data.total)
+  })
+}
+const tableDetailClick = (row) => {
+  router.push(`${tableName}Detail?id=` + row.id + (centerType.value?'&&centerType=1':''))
+}
+// Download File
+const download = (file) =>{
+  if(!file){
+    context?.$toolUtil.message('File not found','error')
+  }
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.setAttribute('target', '_blank');
+  file && a.setAttribute('download', file);
+  a.href = context?.$config.url + file;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+// View Large Image
+const preViewUrl = ref('')
+const preViewVisible = ref(false)
+const preViewClick = (url) =>{
+  preViewUrl.value = url
+  preViewVisible.value = true
+}
+const init = () => {
+  if(route.query.centerType){
+    centerType.value = true
+  }
+  getList()
+}
+init()
 </script>
+
 <style lang="scss" scoped>
 	// 返回盒子
 	.back_view {

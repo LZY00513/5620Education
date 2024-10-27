@@ -66,7 +66,7 @@ public class ForumController {
     @RequestMapping("/page")
     public R page(@RequestParam Map<String, Object> params,ForumEntity forum,
 		HttpServletRequest request){
-    	if(!request.getSession().getAttribute("role").toString().equals("管理员")) {
+    	if(!request.getSession().getAttribute("role").toString().equals("admin")) {
     		forum.setUserid((Long)request.getSession().getAttribute("userId"));
     	}
         QueryWrapper<ForumEntity> ew = new QueryWrapper<ForumEntity>();
@@ -88,7 +88,7 @@ public class ForumController {
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params,ForumEntity forum,
 		HttpServletRequest request){
-    	if(!request.getSession().getAttribute("role").toString().equals("管理员")) {
+    	if(!request.getSession().getAttribute("role").toString().equals("admin")) {
     		forum.setUserid((Long)request.getSession().getAttribute("userId"));
     	}
         QueryWrapper<ForumEntity> ew = new QueryWrapper<ForumEntity>();
@@ -116,7 +116,7 @@ public class ForumController {
         QueryWrapper< ForumEntity> ew = new QueryWrapper< ForumEntity>();
  		ew.allEq(MPUtil.allEQMapPre( forum, "forum"));
 		ForumView forumView =  forumService.selectView(ew);
-		return R.ok("查询论坛交流成功").put("data", forumView);
+		return R.ok("search communication plateform success").put("data", forumView);
     }
 
     /**

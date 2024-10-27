@@ -67,10 +67,10 @@ public class JiaoshiController {
 	public R login(String username, String password, String captcha, HttpServletRequest request) {
 		JiaoshiEntity u = jiaoshiService.getOne(new QueryWrapper<JiaoshiEntity>().eq("jiaoshigonghao", username));
         if(u==null || !u.getMima().equals(password)) {
-            return R.error("账号或密码不正确");
+            return R.error("id or password error");
         }
-        if(!"是".equals(u.getSfsh())) return R.error("账号已锁定，请联系管理员审核。");
-		String token = tokenService.generateToken(u.getId(), username,"jiaoshi",  "教师" );
+        if(!"yes".equals(u.getSfsh())) return R.error("id locked，please connect admin for help.");
+		String token = tokenService.generateToken(u.getId(), username,"jiaoshi",  "teacher" );
 		return R.ok().put("token", token);
 	}
 
@@ -85,7 +85,7 @@ public class JiaoshiController {
     	//ValidatorUtils.validateEntity(jiaoshi);
     	JiaoshiEntity u = jiaoshiService.getOne(new QueryWrapper<JiaoshiEntity>().eq("jiaoshigonghao", jiaoshi.getJiaoshigonghao()));
 		if(u!=null) {
-			return R.error("注册用户已存在");
+			return R.error("user exist");
 		}
 		Long uId = new Date().getTime();
 		jiaoshi.setId(uId);
@@ -100,7 +100,7 @@ public class JiaoshiController {
 	@RequestMapping("/logout")
 	public R logout(HttpServletRequest request) {
 		request.getSession().invalidate();
-		return R.ok("退出成功");
+		return R.ok("exit success");
 	}
 
 	/**
@@ -120,11 +120,11 @@ public class JiaoshiController {
     public R resetPass(String username, HttpServletRequest request){
     	JiaoshiEntity u = jiaoshiService.getOne(new QueryWrapper<JiaoshiEntity>().eq("jiaoshigonghao", username));
     	if(u==null) {
-    		return R.error("账号不存在");
+    		return R.error("id not exist");
     	}
         u.setMima("123456");
         jiaoshiService.updateById(u);
-        return R.ok("密码已重置为：123456");
+        return R.ok("password overlapped：123456");
     }
 
 
@@ -180,7 +180,7 @@ public class JiaoshiController {
         QueryWrapper< JiaoshiEntity> ew = new QueryWrapper< JiaoshiEntity>();
  		ew.allEq(MPUtil.allEQMapPre( jiaoshi, "jiaoshi"));
 		JiaoshiView jiaoshiView =  jiaoshiService.selectView(ew);
-		return R.ok("查询教师成功").put("data", jiaoshiView);
+		return R.ok("search teacher success").put("data", jiaoshiView);
     }
 
     /**
@@ -213,13 +213,13 @@ public class JiaoshiController {
     @RequestMapping("/save")
     public R save(@RequestBody JiaoshiEntity jiaoshi, HttpServletRequest request){
         if(jiaoshiService.count(new QueryWrapper<JiaoshiEntity>().eq("jiaoshigonghao", jiaoshi.getJiaoshigonghao()))>0) {
-            return R.error("教师工号已存在");
+            return R.error("teacher id existed");
         }
     	jiaoshi.setId(new Date().getTime()+(long)Math.floor(Math.random()*1000));
     	//ValidatorUtils.validateEntity(jiaoshi);
     	JiaoshiEntity u = jiaoshiService.getOne(new QueryWrapper<JiaoshiEntity>().eq("jiaoshigonghao", jiaoshi.getJiaoshigonghao()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("user existed");
 		}
 		jiaoshi.setId(new Date().getTime());
         jiaoshiService.save(jiaoshi);
@@ -232,13 +232,13 @@ public class JiaoshiController {
     @RequestMapping("/add")
     public R add(@RequestBody JiaoshiEntity jiaoshi, HttpServletRequest request){
         if(jiaoshiService.count(new QueryWrapper<JiaoshiEntity>().eq("jiaoshigonghao", jiaoshi.getJiaoshigonghao()))>0) {
-            return R.error("教师工号已存在");
+            return R.error("teacher id existed");
         }
     	jiaoshi.setId(new Date().getTime()+(long)Math.floor(Math.random()*1000));
     	//ValidatorUtils.validateEntity(jiaoshi);
     	JiaoshiEntity u = jiaoshiService.getOne(new QueryWrapper<JiaoshiEntity>().eq("jiaoshigonghao", jiaoshi.getJiaoshigonghao()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("user existed");
 		}
 		jiaoshi.setId(new Date().getTime());
         jiaoshiService.save(jiaoshi);

@@ -1,272 +1,274 @@
 <template>
-	<div>
-		<div class="home_box">
-			<!-- 教师首页展示 -->
-			<div class="homeList_view">
-				<div class="homeList_title">
-                    <span>教师展示</span>
+  <div>
+    <div class="home_box">
+      <!-- Teacher Home Display -->
+      <div class="homeList_view">
+        <div class="homeList_title">
+          <span>Teacher Display</span>
+        </div>
+        <div class="homeList">
+          <div class="item" v-for="(item,index) in jiaoshiHomeList" :key="index" @click="detailClick('jiaoshi',item.id)">
+            <div class="img-box">
+              <img v-if="isHttp(item.touxiang)" :src="item.touxiang.split(',')[0]" alt="">
+              <img v-else :src="item.touxiang?$config.url + item.touxiang.split(',')[0]:''" alt="">
+            </div>
+            <div class="content-box">
+              <div class="title">
+                {{item.jiaoshixingming}}
+              </div>
+              <div class="title">
+                Major: {{item.zhuanye}}
+              </div>
+              <div class="statistic">
+                <div class="collect">
+                  <span class="iconfont icon-likeline4"></span>
+                  <div class="num">{{item.storeupNumber}}</div>
                 </div>
-				<div class="homeList">
-					<div class="item" v-for="(item,index) in jiaoshiHomeList" :key="index" @click="detailClick('jiaoshi',item.id)">
-						<div class="img-box">
-							<img v-if="isHttp(item.touxiang)" :src="item.touxiang.split(',')[0]" alt="">
-							<img v-else :src="item.touxiang?$config.url + item.touxiang.split(',')[0]:''" alt="">
-						</div>
-						<div class="content-box">
-							<div class="title">
-								{{item.jiaoshixingming}}
-							</div>
-							<div class="title">
-								专业：{{item.zhuanye}}
-							</div>
-							<div class="statistic">
-								<div class="collect">
-									<span class="iconfont icon-likeline4"></span>
-									<div class="num">{{item.storeupNumber}}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="homeList_more_view" @click="moreClick('jiaoshi')">
-					<span class="homeList_more_text">查看更多 +</span>
-				</div>
-			</div>
-			<!-- 作业信息首页展示 -->
-			<div class="homeList_view">
-				<div class="homeList_title">
-                    <span>作业信息展示</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="homeList_more_view" @click="moreClick('jiaoshi')">
+          <span class="homeList_more_text">View More +</span>
+        </div>
+      </div>
+      <!-- Assignment Information Home Display -->
+      <div class="homeList_view">
+        <div class="homeList_title">
+          <span>Assignment Information Display</span>
+        </div>
+        <div class="homeList">
+          <div class="item" v-for="(item,index) in zuoyexinxiHomeList" :key="index" @click="detailClick('zuoyexinxi',item.id)">
+            <div class="img-box">
+              <img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
+              <img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
+            </div>
+            <div class="content-box">
+              <div class="title">
+                {{item.zuoyemingcheng}}
+              </div>
+              <div class="title">
+                Release Time: {{item.fabushijian}}
+              </div>
+              <div class="statistic">
+                <div class="collect">
+                  <span class="iconfont icon-likeline4"></span>
+                  <div class="num">{{item.storeupNumber}}</div>
                 </div>
-				<div class="homeList">
-					<div class="item" v-for="(item,index) in zuoyexinxiHomeList" :key="index" @click="detailClick('zuoyexinxi',item.id)">
-						<div class="img-box">
-							<img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
-							<img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
-						</div>
-						<div class="content-box">
-							<div class="title">
-								{{item.zuoyemingcheng}}
-							</div>
-							<div class="title">
-								发布时间：{{item.fabushijian}}
-							</div>
-							<div class="statistic">
-								<div class="collect">
-									<span class="iconfont icon-likeline4"></span>
-									<div class="num">{{item.storeupNumber}}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="homeList_more_view" @click="moreClick('zuoyexinxi')">
-					<span class="homeList_more_text">查看更多 +</span>
-				</div>
-			</div>
-			<!-- 教学资源首页展示 -->
-			<div class="homeList_view">
-				<div class="homeList_title">
-                    <span>教学资源展示</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="homeList_more_view" @click="moreClick('zuoyexinxi')">
+          <span class="homeList_more_text">View More +</span>
+        </div>
+      </div>
+      <!-- Teaching Resources Home Display -->
+      <div class="homeList_view">
+        <div class="homeList_title">
+          <span>Teaching Resources Display</span>
+        </div>
+        <div class="categoryList">
+          <div class="item" @click="jiaoxueziyuanCategoryChange(-1)" style="cursor: pointer" :class="{active:jiaoxueziyuan_index==-1}">All</div>
+          <div class="item" v-for="(item,index) in jiaoxueziyuanCategorys" @click="jiaoxueziyuanCategoryChange(index)" :class="{active:jiaoxueziyuan_index==index}" style="cursor: pointer">
+            {{item}}
+          </div>
+        </div>
+        <div class="homeList">
+          <div class="item" v-for="(item,index) in jiaoxueziyuanHomeList" :key="index" @click="detailClick('jiaoxueziyuan',item.id)">
+            <div class="img-box">
+              <img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
+              <img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
+            </div>
+            <div class="content-box">
+              <div class="title">
+                {{item.ziyuanmingcheng}}
+              </div>
+              <div class="statistic">
+                <div class="collect">
+                  <span class="iconfont icon-likeline4"></span>
+                  <div class="num">{{item.storeupNumber}}</div>
                 </div>
-				<div class="categoryList">
-					<div class="item" @click="jiaoxueziyuanCategoryChange(-1)" style="cursor: pointer" :class="{active:jiaoxueziyuan_index==-1}">全部</div>
-					<div class="item" v-for="(item,index) in jiaoxueziyuanCategorys" @click="jiaoxueziyuanCategoryChange(index)" :class="{active:jiaoxueziyuan_index==index}" style="cursor: pointer">
-						{{item}}
-					</div>
-				</div>
-				<div class="homeList">
-					<div class="item" v-for="(item,index) in jiaoxueziyuanHomeList" :key="index" @click="detailClick('jiaoxueziyuan',item.id)">
-						<div class="img-box">
-							<img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
-							<img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
-						</div>
-						<div class="content-box">
-							<div class="title">
-								{{item.ziyuanmingcheng}}
-							</div>
-							<div class="statistic">
-								<div class="collect">
-									<span class="iconfont icon-likeline4"></span>
-									<div class="num">{{item.storeupNumber}}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="homeList_more_view" @click="moreClick('jiaoxueziyuan')">
-					<span class="homeList_more_text">查看更多 +</span>
-				</div>
-			</div>
-			<!-- 公告信息 -->
-			<div class="newsList_view">
-				<div class="ntitle">  <div class="n1">公告信息</div> <div class="n2">NEWS INFORMATION</div> </div>
-				
-				    <div class="nlist">
-				         <ul> 
-				        <li v-for="(item,index) in newsList" :key="index" @click="newsDetailClick(item)">
-				          
-				          <div class="imgbox">
-				                <img :src="item.imgUrl" >
-				            </div>
-				          
-				          <div class="infobox">
-				            <div class="nam">{{item.title}}</div>
-				            <div class="info">{{item.introduction}}</div>
-				          </div>
-				          
-				          <div class="tim"><div class="t1">{{moment(item.addtime).format('DD')}}</div><div class="t2">{{moment(item.addtime).format('YYYY-MM-DD')}}</div></div>
-				          
-				        </li>
-				         </ul> 
-				    </div>
-				
-				<div class="nmore" @click="moreClick('news')" style="cursor: pointer">查看更多 +</div>
-			</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="homeList_more_view" @click="moreClick('jiaoxueziyuan')">
+          <span class="homeList_more_text">View More +</span>
+        </div>
+      </div>
+      <!-- Announcement Information -->
+      <div class="newsList_view">
+        <div class="ntitle">  <div class="n1">Announcement Information</div> <div class="n2">NEWS INFORMATION</div> </div>
 
-		</div>
-		<formModel ref="newsFormModelRef"></formModel>
-	</div>
+        <div class="nlist">
+          <ul>
+            <li v-for="(item,index) in newsList" :key="index" @click="newsDetailClick(item)">
+
+              <div class="imgbox">
+                <img :src="item.imgUrl" >
+              </div>
+
+              <div class="infobox">
+                <div class="nam">{{item.title}}</div>
+                <div class="info">{{item.introduction}}</div>
+              </div>
+
+              <div class="tim"><div class="t1">{{moment(item.addtime).format('DD')}}</div><div class="t2">{{moment(item.addtime).format('YYYY-MM-DD')}}</div></div>
+
+            </li>
+          </ul>
+        </div>
+
+        <div class="nmore" @click="moreClick('news')" style="cursor: pointer">View More +</div>
+      </div>
+
+    </div>
+    <formModel ref="newsFormModelRef"></formModel>
+  </div>
 </template>
 
+
 <script setup>
-	import {
-		ref,
-		getCurrentInstance
-	} from 'vue';
-	import moment from 'moment'
-	import {
-		useRouter
-	} from 'vue-router';
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	const router = useRouter()
-	//教师首页展示
-	const jiaoshiHomeList = ref([])
-	const getjiaoshiHomeList = () => {
-		let params = {
-			page: 1,
-			limit: 6
-		}
-		context?.$http({
-			url: 'jiaoshi/list',
-			method: 'get',
-			params: params
-		}).then(res => {
-			jiaoshiHomeList.value = res.data.data.list
-			jiaoshiHomeList.value.forEach(item=>{
-				if(!isHttp(item.touxiang)){
-					item.imgUrls = item.touxiang.split(',').map(item=>context.$config.url+item)
-				}
-			})
-		})
-	}
-	//作业信息首页展示
-	const zuoyexinxiHomeList = ref([])
-	const getzuoyexinxiHomeList = () => {
-		let params = {
-			page: 1,
-			limit: 6
-		}
-		context?.$http({
-			url: 'zuoyexinxi/list',
-			method: 'get',
-			params: params
-		}).then(res => {
-			zuoyexinxiHomeList.value = res.data.data.list
-			zuoyexinxiHomeList.value.forEach(item=>{
-				if(!isHttp(item.fengmian)){
-					item.imgUrls = item.fengmian.split(',').map(item=>context.$config.url+item)
-				}
-			})
-		})
-	}
-	//教学资源首页展示
-	const jiaoxueziyuanCategorys = ref([])
-	const jiaoxueziyuan_index = ref(-1)
-	const getjiaoxueziyuanCategorys = () => {
-		context?.$http({
-			url: 'option/ziyuanleixing/ziyuanleixing',
-			method: 'get'
-		}).then(res => {
-			jiaoxueziyuanCategorys.value = res.data.data
-		})
-	}
-	getjiaoxueziyuanCategorys()
-	const jiaoxueziyuanCategoryChange = (index)=>{
-		jiaoxueziyuan_index.value = index
-		getjiaoxueziyuanHomeList()
-	}
-	const jiaoxueziyuanHomeList = ref([])
-	const getjiaoxueziyuanHomeList = () => {
-		let params = {
-			page: 1,
-			limit: 6
-		}
-		if(jiaoxueziyuan_index.value>=0){
-            params.ziyuanleixing = jiaoxueziyuanCategorys.value[jiaoxueziyuan_index.value]
-		}
-		context?.$http({
-			url: 'jiaoxueziyuan/list',
-			method: 'get',
-			params: params
-		}).then(res => {
-			jiaoxueziyuanHomeList.value = res.data.data.list
-			jiaoxueziyuanHomeList.value.forEach(item=>{
-				if(!isHttp(item.fengmian)){
-					item.imgUrls = item.fengmian.split(',').map(item=>context.$config.url+item)
-				}
-			})
-		})
-	}
-	//公告信息弹窗
-	import formModel from './news/formModel'
-	const newsFormModelRef = ref(null)
-	//公告信息
-	const newsList = ref([])
-	const getNewsList = () => {
-		context?.$http({
-			url: 'news/list',
-			method: 'get',
-			params:{
-				page:1,
-				limit: 4
-			}
-		}).then(res=>{
-			newsList.value = res.data.data.list
-			newsList.value.forEach(item=>{
-				if(!isHttp(item.picture)){
-					item.imgUrl=context.$config.url+item.picture.split(',')[0]
-				}
-			})
-		})
-	}
-	const newsDetailClick = (item) => {
-		if (item && item.id){
-			newsFormModelRef.value.init(item.id)
-		}
-	}
-	//判断图片链接是否带http
-	const isHttp = (str) => {
-        return str && str.substr(0,4)=='http';
+import {
+  ref,
+  getCurrentInstance
+} from 'vue';
+import moment from 'moment'
+import {
+  useRouter
+} from 'vue-router';
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const router = useRouter()
+// Teacher Home Display
+const jiaoshiHomeList = ref([])
+const getjiaoshiHomeList = () => {
+  let params = {
+    page: 1,
+    limit: 6
+  }
+  context?.$http({
+    url: 'jiaoshi/list',
+    method: 'get',
+    params: params
+  }).then(res => {
+    jiaoshiHomeList.value = res.data.data.list
+    jiaoshiHomeList.value.forEach(item=>{
+      if(!isHttp(item.touxiang)){
+        item.imgUrls = item.touxiang.split(',').map(item=>context.$config.url+item)
+      }
+    })
+  })
+}
+// Assignment Information Home Display
+const zuoyexinxiHomeList = ref([])
+const getzuoyexinxiHomeList = () => {
+  let params = {
+    page: 1,
+    limit: 6
+  }
+  context?.$http({
+    url: 'zuoyexinxi/list',
+    method: 'get',
+    params: params
+  }).then(res => {
+    zuoyexinxiHomeList.value = res.data.data.list
+    zuoyexinxiHomeList.value.forEach(item=>{
+      if(!isHttp(item.fengmian)){
+        item.imgUrls = item.fengmian.split(',').map(item=>context.$config.url+item)
+      }
+    })
+  })
+}
+// Teaching Resources Home Display
+const jiaoxueziyuanCategorys = ref([])
+const jiaoxueziyuan_index = ref(-1)
+const getjiaoxueziyuanCategorys = () => {
+  context?.$http({
+    url: 'option/ziyuanleixing/ziyuanleixing',
+    method: 'get'
+  }).then(res => {
+    jiaoxueziyuanCategorys.value = res.data.data
+  })
+}
+getjiaoxueziyuanCategorys()
+const jiaoxueziyuanCategoryChange = (index)=>{
+  jiaoxueziyuan_index.value = index
+  getjiaoxueziyuanHomeList()
+}
+const jiaoxueziyuanHomeList = ref([])
+const getjiaoxueziyuanHomeList = () => {
+  let params = {
+    page: 1,
+    limit: 6
+  }
+  if(jiaoxueziyuan_index.value>=0){
+    params.ziyuanleixing = jiaoxueziyuanCategorys.value[jiaoxueziyuan_index.value]
+  }
+  context?.$http({
+    url: 'jiaoxueziyuan/list',
+    method: 'get',
+    params: params
+  }).then(res => {
+    jiaoxueziyuanHomeList.value = res.data.data.list
+    jiaoxueziyuanHomeList.value.forEach(item=>{
+      if(!isHttp(item.fengmian)){
+        item.imgUrls = item.fengmian.split(',').map(item=>context.$config.url+item)
+      }
+    })
+  })
+}
+// Announcement Information Popup
+import formModel from './news/formModel'
+const newsFormModelRef = ref(null)
+// Announcement Information
+const newsList = ref([])
+const getNewsList = () => {
+  context?.$http({
+    url: 'news/list',
+    method: 'get',
+    params:{
+      page:1,
+      limit: 4
     }
-	//跳转详情
-	const detailClick = (table,id) => {
-		router.push(`/index/${table}Detail?id=${id}`)
-	}
-	const moreClick = (table) => {
-		router.push(`/index/${table}List`)
-	}
-	const init = () => {
-		//教师首页展示
-		getjiaoshiHomeList()
-		//作业信息首页展示
-		getzuoyexinxiHomeList()
-		//教学资源首页展示
-		getjiaoxueziyuanHomeList()
-		//公告信息
-		getNewsList()
-	}
-	init()
+  }).then(res=>{
+    newsList.value = res.data.data.list
+    newsList.value.forEach(item=>{
+      if(!isHttp(item.picture)){
+        item.imgUrl=context.$config.url+item.picture.split(',')[0]
+      }
+    })
+  })
+}
+const newsDetailClick = (item) => {
+  if (item && item.id){
+    newsFormModelRef.value.init(item.id)
+  }
+}
+// Check if image link contains http
+const isHttp = (str) => {
+  return str && str.substr(0,4)=='http';
+}
+// Navigate to Detail
+const detailClick = (table,id) => {
+  router.push(`/index/${table}Detail?id=${id}`)
+}
+const moreClick = (table) => {
+  router.push(`/index/${table}List`)
+}
+const init = () => {
+  // Teacher Home Display
+  getjiaoshiHomeList()
+  // Assignment Information Home Display
+  getzuoyexinxiHomeList()
+  // Teaching Resources Home Display
+  getjiaoxueziyuanHomeList()
+  // Announcement Information
+  getNewsList()
+}
+init()
 </script>
+
 
 <style lang="scss">
 	.home_box {

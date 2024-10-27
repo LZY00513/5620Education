@@ -120,7 +120,7 @@ public class XueshengyuyuejiaoshiController {
         QueryWrapper< XueshengyuyuejiaoshiEntity> ew = new QueryWrapper< XueshengyuyuejiaoshiEntity>();
  		ew.allEq(MPUtil.allEQMapPre( xueshengyuyuejiaoshi, "xueshengyuyuejiaoshi"));
 		XueshengyuyuejiaoshiView xueshengyuyuejiaoshiView =  xueshengyuyuejiaoshiService.selectView(ew);
-		return R.ok("查询学生预约教师成功").put("data", xueshengyuyuejiaoshiView);
+		return R.ok("search student appointment teacher success").put("data", xueshengyuyuejiaoshiView);
     }
 
     /**

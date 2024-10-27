@@ -110,7 +110,7 @@ public class NewsController {
         QueryWrapper< NewsEntity> ew = new QueryWrapper< NewsEntity>();
  		ew.allEq(MPUtil.allEQMapPre( news, "news"));
 		NewsView newsView =  newsService.selectView(ew);
-		return R.ok("查询公告信息成功").put("data", newsView);
+		return R.ok("search news success").put("data", newsView);
     }
 
     /**

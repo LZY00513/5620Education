@@ -110,7 +110,7 @@ public class MenuController {
         QueryWrapper< MenuEntity> ew = new QueryWrapper< MenuEntity>();
  		ew.allEq(MPUtil.allEQMapPre( menu, "menu"));
 		MenuView menuView =  menuService.selectView(ew);
-		return R.ok("查询菜单成功").put("data", menuView);
+		return R.ok("search menu success").put("data", menuView);
     }
 
     /**

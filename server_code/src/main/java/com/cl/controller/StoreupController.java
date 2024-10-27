@@ -113,7 +113,7 @@ public class StoreupController {
         QueryWrapper< StoreupEntity> ew = new QueryWrapper< StoreupEntity>();
  		ew.allEq(MPUtil.allEQMapPre( storeup, "storeup"));
 		StoreupView storeupView =  storeupService.selectView(ew);
-		return R.ok("查询我的收藏成功").put("data", storeupView);
+		return R.ok("search storeup success").put("data", storeupView);
     }
 
     /**

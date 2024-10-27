@@ -117,7 +117,7 @@ public class TijiaozuoyeController {
         QueryWrapper< TijiaozuoyeEntity> ew = new QueryWrapper< TijiaozuoyeEntity>();
  		ew.allEq(MPUtil.allEQMapPre( tijiaozuoye, "tijiaozuoye"));
 		TijiaozuoyeView tijiaozuoyeView =  tijiaozuoyeService.selectView(ew);
-		return R.ok("查询提交作业成功").put("data", tijiaozuoyeView);
+		return R.ok("search query success").put("data", tijiaozuoyeView);
     }
 
     /**

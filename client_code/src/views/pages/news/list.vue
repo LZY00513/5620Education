@@ -1,151 +1,152 @@
 <template>
-	<div class="list-page news-page" :style='{}'>
-		<div class="back_view" v-if="centerType">
-			<el-button class="back_btn" @click="backClick" type="primary">返回</el-button>
-		</div>
-		<div class="section_title">
-            <span>{{formName}}</span>
-		</div>
-		<el-form inline :model="searchQuery" class="list_search">
-			<div class="search_view">
-				<div class="search_label">
-					标题：
-				</div>
-				<div class="search_box">
-					<el-input v-model="searchQuery.title" placeholder="标题" clearable></el-input>
-				</div>
-			</div>
-			<div class="search_btn_view">
-				<el-button class="search_btn" type="primary" @click="searchClick">搜索</el-button>
-			</div>
-		</el-form>
-		<div class="news_list_one">
-			<div class="list-item animation_box" v-for="(item,index) in list" :key="index" @click="newsDetail(item.id)">
-				<div class="news_img_box">
-					<img class="news_img" :src="$config.url + item.picture" alt="">
-				</div>
-				<div class="news_content">
-					<div class="news_title"><span>{{item.title}}</span></div>
-					<div class="news_intro">{{item.introduction}}</div>
-					<div class="news_time">{{item.addtime.split(' ')[0]}}</div>
-				</div>
-			</div>
-		</div>
-		<el-pagination
-			background 
-			:layout="layouts.join(',')"
-			:total="total" 
-			:page-size="listQuery.limit"
-			prev-text="上一页"
-			next-text="下一页"
-			:hide-on-single-page="false"
-			:style='{}'
-			@size-change="sizeChange"
-			@current-change="currentChange" 
-			@prev-click="prevClick"
-			@next-click="nextClick"  />
-		
-		
-		<formModel ref="formModelRef"></formModel>
-	</div>
+  <div class="list-page news-page" :style='{}'>
+    <div class="back_view" v-if="centerType">
+      <el-button class="back_btn" @click="backClick" type="primary">Return</el-button>
+    </div>
+    <div class="section_title">
+      <span>{{formName}}</span>
+    </div>
+    <el-form inline :model="searchQuery" class="list_search">
+      <div class="search_view">
+        <div class="search_label">
+          Title:
+        </div>
+        <div class="search_box">
+          <el-input v-model="searchQuery.title" placeholder="Title" clearable></el-input>
+        </div>
+      </div>
+      <div class="search_btn_view">
+        <el-button class="search_btn" type="primary" @click="searchClick">Search</el-button>
+      </div>
+    </el-form>
+    <div class="news_list_one">
+      <div class="list-item animation_box" v-for="(item,index) in list" :key="index" @click="newsDetail(item.id)">
+        <div class="news_img_box">
+          <img class="news_img" :src="$config.url + item.picture" alt="">
+        </div>
+        <div class="news_content">
+          <div class="news_title"><span>{{item.title}}</span></div>
+          <div class="news_intro">{{item.introduction}}</div>
+          <div class="news_time">{{item.addtime.split(' ')[0]}}</div>
+        </div>
+      </div>
+    </div>
+    <el-pagination
+        background
+        :layout="layouts.join(',')"
+        :total="total"
+        :page-size="listQuery.limit"
+        prev-text="Previous"
+        next-text="Next"
+        :hide-on-single-page="false"
+        :style='{}'
+        @size-change="sizeChange"
+        @current-change="currentChange"
+        @prev-click="prevClick"
+        @next-click="nextClick"  />
+
+
+    <formModel ref="formModelRef"></formModel>
+  </div>
 </template>
 
 <script setup>
-	import moment from 'moment'
-	import formModel from './formModel'
-	import {
-		ref,
-		nextTick,
-		getCurrentInstance
-	} from 'vue';
-	import {
-		ElMessageBox
-	} from 'element-plus'
-	import {
-		useRoute,
-		useRouter
-	} from 'vue-router'
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	//基础信息
-	const tableName = 'news'
-	const formName = '公告信息'
-	const router = useRouter()
-	const route = useRoute()
-	//基础信息
-	//权限验证
-	const btnAuth = (e, a) => {
-		return context?.$toolUtil.isAuth(e, a)
-	}
-	const list = ref([])
-	const listLoading = ref(false)
-	const listQuery = ref({
-		page: 1,
-		limit: 20,
-		sort: 'addtime',
-		order: 'desc'
-	})
-	const searchQuery = ref({})
-	//分页
-	const layouts = ref(["total","prev","pager","next","sizes","jumper"])
-	const total = ref(0)
-	const sizeChange = (size) => {
-		listQuery.value.limit = size
-		getList()
-	}
-	const currentChange = (page) => {
-		listQuery.value.page = page
-		getList()
-	}
-	const prevClick = () => {
-		listQuery.value.page = listQuery.value.page - 1
-		getList()
-	}
-	const nextClick = () => {
-		listQuery.value.page = listQuery.value.page + 1
-		getList()
-	}
-	//分页
-	const searchClick = () => {
-		listQuery.value.page = 1
-		getList()
-	}
-	const getList = () => {
-		listLoading.value = true
-		let params = JSON.parse(JSON.stringify(listQuery.value))
-		if (searchQuery.value.title && searchQuery.value.title != '') {
-			params['title'] = `%${searchQuery.value.title}%`
-		}
-		context?.$http({
-			url: `news/list`,
-			method: 'get',
-			params: params
-		}).then(res => {
-			listLoading.value = false
-			list.value = res.data.data.list
-			total.value = res.data.data.total
-		})
-	}
-	//判断是否从个人中心跳转
-	const centerType = ref(false)
-	//返回
-	const backClick = () => {
-		router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
-	}
-	const init = () => {
-		if (route.query.centerType) {
-			centerType.value = true
-		}
-		getList()
-	}
-	//定义弹窗
-	const formModelRef = ref(null)
-	const newsDetail = (id = null) => {
-		if (id) {
-			formModelRef.value.init(id)
-		}
-	}
-	init()
+import moment from 'moment'
+import formModel from './formModel'
+import {
+  ref,
+  nextTick,
+  getCurrentInstance
+} from 'vue';
+import {
+  ElMessageBox
+} from 'element-plus'
+import {
+  useRoute,
+  useRouter
+} from 'vue-router'
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+// Basic Information
+const tableName = 'news'
+const formName = 'Announcement Information'
+const router = useRouter()
+const route = useRoute()
+// Basic Information
+// Permission Verification
+const btnAuth = (e, a) => {
+  return context?.$toolUtil.isAuth(e, a)
+}
+const list = ref([])
+const listLoading = ref(false)
+const listQuery = ref({
+  page: 1,
+  limit: 20,
+  sort: 'addtime',
+  order: 'desc'
+})
+const searchQuery = ref({})
+// Pagination
+const layouts = ref(["total","prev","pager","next","sizes","jumper"])
+const total = ref(0)
+const sizeChange = (size) => {
+  listQuery.value.limit = size
+  getList()
+}
+const currentChange = (page) => {
+  listQuery.value.page = page
+  getList()
+}
+const prevClick = () => {
+  listQuery.value.page = listQuery.value.page - 1
+  getList()
+}
+const nextClick = () => {
+  listQuery.value.page = listQuery.value.page + 1
+  getList()
+}
+// Pagination
+const searchClick = () => {
+  listQuery.value.page = 1
+  getList()
+}
+const getList = () => {
+  listLoading.value = true
+  let params = JSON.parse(JSON.stringify(listQuery.value))
+  if (searchQuery.value.title && searchQuery.value.title != '') {
+    params['title'] = `%${searchQuery.value.title}%`
+  }
+  context?.$http({
+    url: `news/list`,
+    method: 'get',
+    params: params
+  }).then(res => {
+    listLoading.value = false
+    list.value = res.data.data.list
+    total.value = res.data.data.total
+  })
+}
+// Check if it is a personal center jump
+const centerType = ref(false)
+// Return
+const backClick = () => {
+  router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
+}
+const init = () => {
+  if (route.query.centerType) {
+    centerType.value = true
+  }
+  getList()
+}
+// Define Popup
+const formModelRef = ref(null)
+const newsDetail = (id = null) => {
+  if (id) {
+    formModelRef.value.init(id)
+  }
+}
+init()
 </script>
+
 
 <style lang="scss" scoped>
 	// 返回盒子

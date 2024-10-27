@@ -1,37 +1,38 @@
 <template>
-	<div>
-		<div class="forget_view">
-			<el-form :model="forgetForm" class="forget_box">
-				<div class="forget_title">在线学习教育平台{{pageType==1?'找回密码':pageType==2?'输入密保':'重置密码'}}</div>
-				<div class="tab_line">
-					<div class="line"></div>
-					<div class="num_line">
-						<div class="line_number" :class="pageType==1?'line_number1':'',pageType>1?'line_number2':''"><div class="number" v-if="pageType<2">1</div><el-icon v-else><Check /></el-icon></div>
-						<div class="line_number" :class="pageType==2?'line_number1':'',pageType>2?'line_number2':''"><div class="number" v-if="pageType<3">2</div><el-icon v-else><Check /></el-icon></div>
-						<div class="line_number" :class="pageType==3?'line_number1':''"><div class="number">3</div></div>
-					</div>
-				</div>
-			</el-form>
-		</div>
-	</div>
+  <div>
+    <div class="forget_view">
+      <el-form :model="forgetForm" class="forget_box">
+        <div class="forget_title">Online Learning Education Platform {{pageType==1?'Retrieve Password':pageType==2?'Enter Security Question':'Reset Password'}}</div>
+        <div class="tab_line">
+          <div class="line"></div>
+          <div class="num_line">
+            <div class="line_number" :class="pageType==1?'line_number1':'',pageType>1?'line_number2':''"><div class="number" v-if="pageType<2">1</div><el-icon v-else><Check /></el-icon></div>
+            <div class="line_number" :class="pageType==2?'line_number1':'',pageType>2?'line_number2':''"><div class="number" v-if="pageType<3">2</div><el-icon v-else><Check /></el-icon></div>
+            <div class="line_number" :class="pageType==3?'line_number1':''"><div class="number">3</div></div>
+          </div>
+        </div>
+      </el-form>
+    </div>
+  </div>
 </template>
 <script setup>
-	import {
-		ref,
-		getCurrentInstance,
-		nextTick,
-	} from 'vue';
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	const pageType = ref(1)
-	const forgetForm = ref({})
-	const userForm = ref({})
-	//返回登录
-	const close = () => {
-		context?.$router.push({
-			path: "/login"
-		});
-	}
+import {
+  ref,
+  getCurrentInstance,
+  nextTick,
+} from 'vue';
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const pageType = ref(1)
+const forgetForm = ref({})
+const userForm = ref({})
+// Return to login
+const close = () => {
+  context?.$router.push({
+    path: "/login"
+  });
+}
 </script>
+
 
 <style lang="scss" scoped>
 	.forget_view {

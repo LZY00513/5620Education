@@ -67,9 +67,9 @@ public class UsersController {
 	public R login(String username, String password, String captcha, HttpServletRequest request) {
 		UsersEntity u = usersService.getOne(new QueryWrapper<UsersEntity>().eq("username", username));
         if(u==null || !u.getPassword().equals(password)) {
-            return R.error("账号或密码不正确");
+            return R.error("id or password error");
         }
-		String token = tokenService.generateToken(u.getId(), username,"users",  "管理员" );
+		String token = tokenService.generateToken(u.getId(), username,"users",  "admin" );
 		return R.ok().put("token", token);
 	}
 
@@ -84,7 +84,7 @@ public class UsersController {
     	//ValidatorUtils.validateEntity(users);
     	UsersEntity u = usersService.getOne(new QueryWrapper<UsersEntity>().eq("username", users.getUsername()));
 		if(u!=null) {
-			return R.error("注册用户已存在");
+			return R.error("user exist");
 		}
 		Long uId = new Date().getTime();
 		users.setId(uId);
@@ -100,7 +100,7 @@ public class UsersController {
 	@RequestMapping("/logout")
 	public R logout(HttpServletRequest request) {
 		request.getSession().invalidate();
-		return R.ok("退出成功");
+		return R.ok("exit success");
 	}
 
 	/**
@@ -120,11 +120,11 @@ public class UsersController {
     public R resetPass(String username, HttpServletRequest request){
     	UsersEntity u = usersService.getOne(new QueryWrapper<UsersEntity>().eq("username", username));
     	if(u==null) {
-    		return R.error("账号不存在");
+    		return R.error("id not exist");
     	}
         u.setPassword("123456");
         usersService.updateById(u);
-        return R.ok("密码已重置为：123456");
+        return R.ok("password overlapped as：123456");
     }
 
 
@@ -180,7 +180,7 @@ public class UsersController {
         QueryWrapper< UsersEntity> ew = new QueryWrapper< UsersEntity>();
  		ew.allEq(MPUtil.allEQMapPre( users, "users"));
 		UsersView usersView =  usersService.selectView(ew);
-		return R.ok("查询管理员成功").put("data", usersView);
+		return R.ok("search admin success").put("data", usersView);
     }
 
     /**
@@ -216,7 +216,7 @@ public class UsersController {
     	//ValidatorUtils.validateEntity(users);
     	UsersEntity u = usersService.getOne(new QueryWrapper<UsersEntity>().eq("username", users.getUsername()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("user existed");
 		}
 		users.setId(new Date().getTime());
         users.setPassword(users.getPassword());
@@ -233,7 +233,7 @@ public class UsersController {
     	//ValidatorUtils.validateEntity(users);
     	UsersEntity u = usersService.getOne(new QueryWrapper<UsersEntity>().eq("username", users.getUsername()));
 		if(u!=null) {
-			return R.error("用户已存在");
+			return R.error("user existed");
 		}
 		users.setId(new Date().getTime());
         users.setPassword(users.getPassword());

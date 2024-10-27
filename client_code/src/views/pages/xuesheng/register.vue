@@ -1,172 +1,173 @@
 <template>
-	<div>
-		<div class="register_view">
-			<el-form :model="registerForm" class="register_form">
-				<div class="title_view">{{projectName}}注册</div>
-				<div class="list_item">
-					<div class="list_label">学号：</div>
-					<input class="list_inp"
-					 v-model="registerForm.xuehao" 
-					 placeholder="请输入学号"
-					 type="text"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">密码：</div>
-					<input class="list_inp"
-					 v-model="registerForm.mima" 
-					 placeholder="请输入密码"
-					 type="password"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">确认密码：</div>
-					<input class="list_inp" v-model="registerForm.mima2" type="password" placeholder="请输入确认密码" />
-				</div>
-				<div class="list_item">
-					<div class="list_label">学生姓名：</div>
-					<input class="list_inp"
-					 v-model="registerForm.xueshengxingming" 
-					 placeholder="请输入学生姓名"
-					 type="text"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">头像：</div>
-					<div class="list_file_list">
-						<uploads
-							action="file/upload" 
-							tip="请上传头像" 
-							:limit="3" 
-							style="width: 100%;text-align: left;"
-							:fileUrls="registerForm.touxiang?registerForm.touxiang:''" 
-							@change="touxiangUploadSuccess">
-						</uploads>
-					</div>
-				</div>
-				<div class="list_item">
-					<div class="list_label">性别：</div>
-					<el-select 
-						class="list_sel" 
-						v-model="registerForm.xingbie" 
-						placeholder="请选择性别"
-						>
-						<el-option v-for="item in xueshengxingbieLists" :label="item" :value="item"></el-option>
-					</el-select>
-				</div>
-				<div class="list_item">
-					<div class="list_label">手机号码：</div>
-					<input class="list_inp"
-					 v-model="registerForm.shoujihaoma" 
-					 placeholder="请输入手机号码"
-					 type="text"
-					 />
-				</div>
-				<div class="list_item">
-					<div class="list_label">家长账号：</div>
-					<el-select 
-						class="list_sel" 
-						v-model="registerForm.jiazhangzhanghao" 
-						placeholder="请选择家长账号"
-						>
-						<el-option v-for="item in xueshengjiazhangzhanghaoLists" :label="item" :value="item"></el-option>
-					</el-select>
-				</div>
-				<div class="list_btn">
-					<el-button class="register" type="success" @click="handleRegister">注册</el-button>
-					<div class="r-login" @click="close">已有账号，直接登录</div>
-				</div>
-			</el-form>	
-		</div>
-	</div>
+  <div>
+    <div class="register_view">
+      <el-form :model="registerForm" class="register_form">
+        <div class="title_view">{{projectName}} Registration</div>
+        <div class="list_item">
+          <div class="list_label">Student ID:</div>
+          <input class="list_inp"
+                 v-model="registerForm.xuehao"
+                 placeholder="Please enter Student ID"
+                 type="text"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Password:</div>
+          <input class="list_inp"
+                 v-model="registerForm.mima"
+                 placeholder="Please enter password"
+                 type="password"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Confirm Password:</div>
+          <input class="list_inp" v-model="registerForm.mima2" type="password" placeholder="Please enter confirm password" />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Student Name:</div>
+          <input class="list_inp"
+                 v-model="registerForm.xueshengxingming"
+                 placeholder="Please enter student name"
+                 type="text"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Avatar:</div>
+          <div class="list_file_list">
+            <uploads
+                action="file/upload"
+                tip="Please upload an avatar"
+                :limit="3"
+                style="width: 100%;text-align: left;"
+                :fileUrls="registerForm.touxiang?registerForm.touxiang:''"
+                @change="touxiangUploadSuccess">
+            </uploads>
+          </div>
+        </div>
+        <div class="list_item">
+          <div class="list_label">Gender:</div>
+          <el-select
+              class="list_sel"
+              v-model="registerForm.xingbie"
+              placeholder="Please select gender"
+          >
+            <el-option v-for="item in xueshengxingbieLists" :label="item" :value="item"></el-option>
+          </el-select>
+        </div>
+        <div class="list_item">
+          <div class="list_label">Mobile Number:</div>
+          <input class="list_inp"
+                 v-model="registerForm.shoujihaoma"
+                 placeholder="Please enter mobile number"
+                 type="text"
+          />
+        </div>
+        <div class="list_item">
+          <div class="list_label">Parent Account:</div>
+          <el-select
+              class="list_sel"
+              v-model="registerForm.jiazhangzhanghao"
+              placeholder="Please select parent account"
+          >
+            <el-option v-for="item in xueshengjiazhangzhanghaoLists" :label="item" :value="item"></el-option>
+          </el-select>
+        </div>
+        <div class="list_btn">
+          <el-button class="register" type="success" @click="handleRegister">Register</el-button>
+          <div class="r-login" @click="close">Already have an account? Log in directly</div>
+        </div>
+      </el-form>
+    </div>
+  </div>
 </template>
 <script setup>
-	import {
-		ref,
-		getCurrentInstance,
-		nextTick,
-		onMounted,
-	} from 'vue';
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	const projectName = context?.$project.projectName
-	//获取注册类型
-	import { useRoute } from 'vue-router';
-	const route = useRoute()
-	const tableName = ref('xuesheng')
-	
-	//公共方法
-	const getUUID=()=> {
-		return new Date().getTime();
-	}
-	
-	const registerForm = ref({
-        xingbie: '',
-        jiazhangzhanghao: '',
-	})
-	const xueshengxingbieLists = ref([])
-	const xueshengjiazhangzhanghaoLists = ref([])
-	const init=()=>{
-		xueshengxingbieLists.value = "男,女".split(',')
-		context?.$http({
-			url:`option/jiazhang/jiazhangzhanghao`,
-			method:'get'
-		}).then(res=>{
-			xueshengjiazhangzhanghaoLists.value = res.data.data
-		})
-	}
-    const touxiangUploadSuccess=(fileUrls)=> {
-        registerForm.value.touxiang = fileUrls;
-    }
-	// 多级联动参数
-	//注册按钮
-	const handleRegister = () => {
-		let url = tableName.value +"/register";
-		if((!registerForm.value.xuehao)){
-			context?.$toolUtil.message(`学号不能为空`,'error')
-			return false
-		}
-		if((!registerForm.value.mima)){
-			context?.$toolUtil.message(`密码不能为空`,'error')
-			return false
-		}
-		if(registerForm.value.mima!=registerForm.value.mima2){
-			context?.$toolUtil.message('两次密码输入不一致','error')
-			return false
-		}
-		if((!registerForm.value.xueshengxingming)){
-			context?.$toolUtil.message(`学生姓名不能为空`,'error')
-			return false
-		}
-		if(registerForm.value.touxiang!=null){
-			registerForm.value.touxiang = registerForm.value.touxiang.replace(new RegExp(context?.$config.url,"g"),"");
-		}
-		if(registerForm.value.shoujihaoma&&(!context?.$toolUtil.isMobile(registerForm.value.shoujihaoma))){
-			context?.$toolUtil.message(`手机号码应输入手机格式`,'error')
-			return false
-		}
-		context?.$http({
-			url:url,
-			method:'post',
-			data:registerForm.value
-		}).then(res=>{
-			context?.$toolUtil.message('注册成功','success', obj=>{
-				context?.$router.push({
-					path: "/login"
-				});
-			})
-		})
-	}
-	//返回登录
-	const close = () => {
-		context?.$router.push({
-			path: "/login"
-		});
-	}
-	init()
-	onMounted(()=>{
+import {
+  ref,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+} from 'vue';
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const projectName = context?.$project.projectName
+// Get registration type
+import { useRoute } from 'vue-router';
+const route = useRoute()
+const tableName = ref('xuesheng')
 
-	})
+// Common method
+const getUUID=()=> {
+  return new Date().getTime();
+}
+
+const registerForm = ref({
+  xingbie: '',
+  jiazhangzhanghao: '',
+})
+const xueshengxingbieLists = ref([])
+const xueshengjiazhangzhanghaoLists = ref([])
+const init=()=>{
+  xueshengxingbieLists.value = "Male,Female".split(',')
+  context?.$http({
+    url:`option/jiazhang/jiazhangzhanghao`,
+    method:'get'
+  }).then(res=>{
+    xueshengjiazhangzhanghaoLists.value = res.data.data
+  })
+}
+const touxiangUploadSuccess=(fileUrls)=> {
+  registerForm.value.touxiang = fileUrls;
+}
+// Multi-level linkage parameters
+// Register button
+const handleRegister = () => {
+  let url = tableName.value +"/register";
+  if((!registerForm.value.xuehao)){
+    context?.$toolUtil.message(`Student ID cannot be empty`,'error')
+    return false
+  }
+  if((!registerForm.value.mima)){
+    context?.$toolUtil.message(`Password cannot be empty`,'error')
+    return false
+  }
+  if(registerForm.value.mima!=registerForm.value.mima2){
+    context?.$toolUtil.message('The two password entries do not match','error')
+    return false
+  }
+  if((!registerForm.value.xueshengxingming)){
+    context?.$toolUtil.message(`Student name cannot be empty`,'error')
+    return false
+  }
+  if(registerForm.value.touxiang!=null){
+    registerForm.value.touxiang = registerForm.value.touxiang.replace(new RegExp(context?.$config.url,"g"),"");
+  }
+  if(registerForm.value.shoujihaoma&&(!context?.$toolUtil.isMobile(registerForm.value.shoujihaoma))){
+    context?.$toolUtil.message(`Mobile number should be in mobile format`,'error')
+    return false
+  }
+  context?.$http({
+    url:url,
+    method:'post',
+    data:registerForm.value
+  }).then(res=>{
+    context?.$toolUtil.message('Registration successful','success', obj=>{
+      context?.$router.push({
+        path: "/login"
+      });
+    })
+  })
+}
+// Return to login
+const close = () => {
+  context?.$router.push({
+    path: "/login"
+  });
+}
+init()
+onMounted(()=>{
+
+})
 </script>
+
 <style lang="scss" scoped>
 	.register_view {
         background-image: url("http://clfile.zggen.cn/20241024/479ba3ebda544acbba7fcbdd6353644a.png");

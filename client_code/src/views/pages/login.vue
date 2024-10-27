@@ -1,135 +1,137 @@
 <template>
-	<div>
-		<div class="login_view">
-			<el-form :model="loginForm" class="login_form">
-				<div class="title_view">在线学习教育平台登录</div>
-				<div class="list_item" v-if="loginType==1">
-					<div class="list_label">
-						账号：
-					</div>
-					<input class="list_inp" v-model="loginForm.username" name="username" placeholder="请输入账号" />
-				</div>
-				<div class="list_item" v-if="loginType==1">
-					<div class="list_label">
-						密码：
-					</div>
-					<input class="list_inp" v-model="loginForm.password" type="password" placeholder="请输入密码" @keydown.enter.native="handleLogin" />
-				</div>
-				<div class="list_type" v-if="userList.length>1">
-					<div class="list_label">
-						用户类型：
-					</div>
-				  <el-select v-model="loginForm.role" placeholder="请选择用户类型">
-				    <el-option v-for="(item,index) in userList" :label="item.roleName" :value="item.roleName"></el-option>
-				  </el-select>
-				</div>
-				<div class="btn_view">
-					<el-button class="login" v-if="loginType==1" type="success" @click="handleLogin">登录</el-button>
-					<el-button class="register" type="primary" @click="handleRegister('xuesheng')">注册学生</el-button>
-					<el-button class="register" type="primary" @click="handleRegister('jiazhang')">注册家长</el-button>
-				</div>
-			</el-form>
-		</div>
-		<Vcode :show="isShow" @success="success" @close="close" @fail='fail'></Vcode>
-	</div>
+  <div>
+    <div class="login_view">
+      <el-form :model="loginForm" class="login_form">
+        <div class="title_view">Online Learning Education Platform Login</div>
+        <div class="list_item" v-if="loginType==1">
+          <div class="list_label">
+            Account:
+          </div>
+          <input class="list_inp" v-model="loginForm.username" name="username" placeholder="Please enter your account" />
+        </div>
+        <div class="list_item" v-if="loginType==1">
+          <div class="list_label">
+            Password:
+          </div>
+          <input class="list_inp" v-model="loginForm.password" type="password" placeholder="Please enter your password" @keydown.enter.native="handleLogin" />
+        </div>
+        <div class="list_type" v-if="userList.length>1">
+          <div class="list_label">
+            User Type:
+          </div>
+          <el-select v-model="loginForm.role" placeholder="Please select user type">
+            <el-option v-for="(item,index) in userList" :label="item.roleName" :value="item.roleName"></el-option>
+          </el-select>
+        </div>
+        <div class="btn_view">
+          <el-button class="login" v-if="loginType==1" type="success" @click="handleLogin">Login</el-button>
+          <el-button class="register" type="primary" @click="handleRegister('xuesheng')">Register Student</el-button>
+          <el-button class="register" type="primary" @click="handleRegister('jiazhang')">Register Parent</el-button>
+        </div>
+      </el-form>
+    </div>
+    <Vcode :show="isShow" @success="success" @close="close" @fail='fail'></Vcode>
+  </div>
 </template>
-<script setup>
-	import {
-		ref,
-		getCurrentInstance,
-		nextTick,
-		onMounted,
-	} from "vue";
-	import {
-		useStore
-	} from 'vuex';
-	const store = useStore()
-	import menu from '@/utils/menu'
-	const userList = ref([])
-	const menus = ref([])
-	const loginForm = ref({
-		role: '',
-		username: '',
-		password: ''
-	})
-	const tableName = ref('')
-	const loginType = ref(1)
-	const context = getCurrentInstance()?.appContext.config.globalProperties;
-	//注册
-    const handleRegister = (tableName) => {
-    	context?.$router.push(`/${tableName}Register`)
-    	
-    }
-	const handleLogin = () => {
-		if (!loginForm.value.username) {
-			context?.$toolUtil.message('请输入用户名', 'error')
-			return;
-		}
-		if (!loginForm.value.password) {
-			context?.$toolUtil.message('请输入密码', 'error')
-			return;
-		}
-		if (userList.value.length > 1) {
-			if (!loginForm.value.role) {
-				context?.$toolUtil.message('请选择角色', 'error')
-				verifySlider.reset()
-				return;
-			}
-			for (let i = 0; i < menus.value.length; i++) {
-				if (menus.value[i].roleName == loginForm.value.role) {
-					tableName.value = menus.value[i].tableName;
-				}
-			}
-		} else {
-			tableName.value = userList.value[0].tableName;
-			loginForm.value.role = userList.value[0].roleName;
-		}
-		login()
-	}
-	const login = () => {
-		context?.$http({
-			url: `${tableName.value}/login?username=${loginForm.value.username}&password=${loginForm.value.password}`,
-			method: 'post'
-		}).then(res => {
-			context?.$toolUtil.storageSet("frontToken", res.data.token);
-			context?.$toolUtil.storageSet("frontRole", loginForm.value.role);
-			context?.$toolUtil.storageSet("frontSessionTable", tableName.value);
-			store.dispatch('user/getSession')
-			let path = context?.$toolUtil.storageGet('toPath')
-			if (path) {
-				context?.$router.push(path)
-				context?.$toolUtil.storageRemove('toPath')
-				return
-			}
-			context?.$router.push(`/index/${tableName.value}Center`)
-		},err=>{
-		})
-	}
-	//获取菜单
-	const getMenu= async ()=> {
-		let arr = menu.list()
-		if(!arr){
-			let res = await context?.$http.get("menu/list")
-			context?.$toolUtil.storageSet("menus", res.data.data.list[0].menujson);
-			arr = JSON.parse(res.data.data.list[0].menujson)
-		}
-		menus.value = arr
-		for (let i = 0; i < menus.value.length; i++) {
-			if (menus.value[i].hasFrontLogin=='是') {
-				userList.value.push(menus.value[i])
-			}
-		}
-    }
-	//初始化
-	const init = async () => {
-		await getMenu();
-		loginForm.value.role = userList.value[0].roleName
-	}
-	onMounted(()=>{
-		init()
 
-	})
+<script setup>
+import {
+  ref,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+} from "vue";
+import {
+  useStore
+} from 'vuex';
+const store = useStore()
+import menu from '@/utils/menu'
+const userList = ref([])
+const menus = ref([])
+const loginForm = ref({
+  role: '',
+  username: '',
+  password: ''
+})
+const tableName = ref('')
+const loginType = ref(1)
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+// Register
+const handleRegister = (tableName) => {
+  context?.$router.push(`/${tableName}Register`)
+
+}
+const handleLogin = () => {
+  if (!loginForm.value.username) {
+    context?.$toolUtil.message('Please enter your username', 'error')
+    return;
+  }
+  if (!loginForm.value.password) {
+    context?.$toolUtil.message('Please enter your password', 'error')
+    return;
+  }
+  if (userList.value.length > 1) {
+    if (!loginForm.value.role) {
+      context?.$toolUtil.message('Please select a role', 'error')
+      verifySlider.reset()
+      return;
+    }
+    for (let i = 0; i < menus.value.length; i++) {
+      if (menus.value[i].roleName == loginForm.value.role) {
+        tableName.value = menus.value[i].tableName;
+      }
+    }
+  } else {
+    tableName.value = userList.value[0].tableName;
+    loginForm.value.role = userList.value[0].roleName;
+  }
+  login()
+}
+const login = () => {
+  context?.$http({
+    url: `${tableName.value}/login?username=${loginForm.value.username}&password=${loginForm.value.password}`,
+    method: 'post'
+  }).then(res => {
+    context?.$toolUtil.storageSet("frontToken", res.data.token);
+    context?.$toolUtil.storageSet("frontRole", loginForm.value.role);
+    context?.$toolUtil.storageSet("frontSessionTable", tableName.value);
+    store.dispatch('user/getSession')
+    let path = context?.$toolUtil.storageGet('toPath')
+    if (path) {
+      context?.$router.push(path)
+      context?.$toolUtil.storageRemove('toPath')
+      return
+    }
+    context?.$router.push(`/index/${tableName.value}Center`)
+  },err=>{
+  })
+}
+// Get menu
+const getMenu= async ()=> {
+  let arr = menu.list()
+  if(!arr){
+    let res = await context?.$http.get("menu/list")
+    context?.$toolUtil.storageSet("menus", res.data.data.list[0].menujson);
+    arr = JSON.parse(res.data.data.list[0].menujson)
+  }
+  menus.value = arr
+  for (let i = 0; i < menus.value.length; i++) {
+    if (menus.value[i].hasFrontLogin=='是') {
+      userList.value.push(menus.value[i])
+    }
+  }
+}
+// Initialization
+const init = async () => {
+  await getMenu();
+  loginForm.value.role = userList.value[0].roleName
+}
+onMounted(()=>{
+  init()
+
+})
 </script>
+
 
 <style lang="scss" scoped>
 	.login_view {

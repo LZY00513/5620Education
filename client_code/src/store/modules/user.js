@@ -7,7 +7,7 @@ export default {
     namespaced: true,
     state:{
         session:{},
-        username:'管理员'
+        username:'Administrator'
     },
     getters:{
         session(state){

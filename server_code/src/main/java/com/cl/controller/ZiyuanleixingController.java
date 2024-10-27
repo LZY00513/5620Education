@@ -110,7 +110,7 @@ public class ZiyuanleixingController {
         QueryWrapper< ZiyuanleixingEntity> ew = new QueryWrapper< ZiyuanleixingEntity>();
  		ew.allEq(MPUtil.allEQMapPre( ziyuanleixing, "ziyuanleixing"));
 		ZiyuanleixingView ziyuanleixingView =  ziyuanleixingService.selectView(ew);
-		return R.ok("查询资源类型成功").put("data", ziyuanleixingView);
+		return R.ok("search source type success").put("data", ziyuanleixingView);
     }
 
     /**
@@ -143,7 +143,7 @@ public class ZiyuanleixingController {
     @RequestMapping("/save")
     public R save(@RequestBody ZiyuanleixingEntity ziyuanleixing, HttpServletRequest request){
         if(ziyuanleixingService.count(new QueryWrapper<ZiyuanleixingEntity>().eq("ziyuanleixing", ziyuanleixing.getZiyuanleixing()))>0) {
-            return R.error("资源类型已存在");
+            return R.error("resource type exist");
         }
     	//ValidatorUtils.validateEntity(ziyuanleixing);
         ziyuanleixingService.save(ziyuanleixing);
@@ -156,7 +156,7 @@ public class ZiyuanleixingController {
     @RequestMapping("/add")
     public R add(@RequestBody ZiyuanleixingEntity ziyuanleixing, HttpServletRequest request){
         if(ziyuanleixingService.count(new QueryWrapper<ZiyuanleixingEntity>().eq("ziyuanleixing", ziyuanleixing.getZiyuanleixing()))>0) {
-            return R.error("资源类型已存在");
+            return R.error("resource type exist");
         }
     	//ValidatorUtils.validateEntity(ziyuanleixing);
         ziyuanleixingService.save(ziyuanleixing);
