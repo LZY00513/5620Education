@@ -4,7 +4,7 @@
       <!-- Teacher Home Display -->
       <div class="homeList_view">
         <div class="homeList_title">
-          <span>Teacher Display</span>
+          <span>Teacher </span>
         </div>
         <div class="homeList">
           <div class="item" v-for="(item,index) in jiaoshiHomeList" :key="index" @click="detailClick('jiaoshi',item.id)">
@@ -13,12 +13,8 @@
               <img v-else :src="item.touxiang?$config.url + item.touxiang.split(',')[0]:''" alt="">
             </div>
             <div class="content-box">
-              <div class="title">
-                {{item.jiaoshixingming}}
-              </div>
-              <div class="title">
-                Major: {{item.zhuanye}}
-              </div>
+              <div class="title">{{item.jiaoshixingming}}</div>
+              <div class="title">Major: {{item.zhuanye}}</div>
               <div class="statistic">
                 <div class="collect">
                   <span class="iconfont icon-likeline4"></span>
@@ -32,10 +28,11 @@
           <span class="homeList_more_text">View More +</span>
         </div>
       </div>
+
       <!-- Assignment Information Home Display -->
       <div class="homeList_view">
         <div class="homeList_title">
-          <span>Assignment Information Display</span>
+          <span>Assignment</span>
         </div>
         <div class="homeList">
           <div class="item" v-for="(item,index) in zuoyexinxiHomeList" :key="index" @click="detailClick('zuoyexinxi',item.id)">
@@ -44,12 +41,8 @@
               <img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
             </div>
             <div class="content-box">
-              <div class="title">
-                {{item.zuoyemingcheng}}
-              </div>
-              <div class="title">
-                Release Time: {{item.fabushijian}}
-              </div>
+              <div class="title">{{item.zuoyemingcheng}}</div>
+              <div class="title">Release Time: {{item.fabushijian}}</div>
               <div class="statistic">
                 <div class="collect">
                   <span class="iconfont icon-likeline4"></span>
@@ -63,10 +56,11 @@
           <span class="homeList_more_text">View More +</span>
         </div>
       </div>
+
       <!-- Teaching Resources Home Display -->
       <div class="homeList_view">
         <div class="homeList_title">
-          <span>Teaching Resources Display</span>
+          <span>Resources</span>
         </div>
         <div class="categoryList">
           <div class="item" @click="jiaoxueziyuanCategoryChange(-1)" style="cursor: pointer" :class="{active:jiaoxueziyuan_index==-1}">All</div>
@@ -81,74 +75,52 @@
               <img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
             </div>
             <div class="content-box">
-              <div class="title">
-                {{item.ziyuanmingcheng}}
-              </div>
+              <div class="title">{{item.ziyuanmingcheng}}</div>
               <div class="statistic">
                 <div class="collect">
                   <span class="iconfont icon-likeline4"></span>
                   <div class="num">{{item.storeupNumber}}</div>
                 </div>
-				<div class="categoryList">
-					<div class="item" @click="jiaoxueziyuanCategoryChange(-1)" style="cursor: pointer" :class="{active:jiaoxueziyuan_index==-1}">全部</div>
-					<div class="item" v-for="(item,index) in jiaoxueziyuanCategorys" @click="jiaoxueziyuanCategoryChange(index)" :class="{active:jiaoxueziyuan_index==index}" style="cursor: pointer">
-						{{item}}
-					</div>
-				</div>
-				<div class="homeList">
-					<div class="item" v-for="(item,index) in jiaoxueziyuanHomeList" :key="index" @click="detailClick('jiaoxueziyuan',item.id)">
-						<div class="img-box">
-							<img v-if="isHttp(item.fengmian)" :src="item.fengmian.split(',')[0]" alt="">
-							<img v-else :src="item.fengmian?$config.url + item.fengmian.split(',')[0]:''" alt="">
-						</div>
-						<div class="content-box">
-							<div class="title">
-								{{item.ziyuanmingcheng}}
-							</div>
-							<div class="statistic">
-								<div class="collect">
-									<span class="iconfont icon-likeline4"></span>
-									<div class="num">{{item.storeupNumber}}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="homeList_more_view" @click="moreClick('jiaoxueziyuan')">
-					<span class="homeList_more_text">查看更多 +</span>
-				</div>
-			</div>
-			<!-- 公告信息 -->
-			<div class="newsList_view">
-				<div class="ntitle">  <div class="n1">公告信息</div> <div class="n2">NEWS INFORMATION</div> </div>
-				
-				    <div class="nlist">
-				         <ul> 
-				        <li v-for="(item,index) in newsList" :key="index" @click="newsDetailClick(item)">
-				          
-				          <div class="imgbox">
-				                <img :src="item.imgUrl" >
-				            </div>
-				          
-				          <div class="infobox">
-				            <div class="nam">{{item.title}}</div>
-				            <div class="info">{{item.introduction}}</div>
-				          </div>
-				          
-				          <div class="tim"><div class="t1">{{moment(item.addtime).format('DD')}}</div><div class="t2">{{moment(item.addtime).format('YYYY-MM-DD')}}</div></div>
-				          
-				        </li>
-				         </ul> 
-				    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="homeList_more_view" @click="moreClick('jiaoxueziyuan')">
+          <span class="homeList_more_text">View More +</span>
+        </div>
+      </div>
 
-				<div class="nmore" @click="moreClick('news')" style="cursor: pointer">查看更多 +</div>
-			</div>
+      <!-- Announcement Information -->
+      <div class="newsList_view">
+        <div class="ntitle">
+          <div class="n1">Announcement</div>
+          <div class="n2">NEWS INFORMATION</div>
+        </div>
+        <div class="nlist">
+          <ul>
+            <li v-for="(item,index) in newsList" :key="index" @click="newsDetailClick(item)">
+              <div class="imgbox">
+                <img :src="item.imgUrl">
+              </div>
+              <div class="infobox">
+                <div class="nam">{{item.title}}</div>
+                <div class="info">{{item.introduction}}</div>
+              </div>
+              <div class="tim">
+                <div class="t1">{{moment(item.addtime).format('DD')}}</div>
+                <div class="t2">{{moment(item.addtime).format('YYYY-MM-DD')}}</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="nmore" @click="moreClick('news')" style="cursor: pointer">View More +</div>
+      </div>
+    </div>
 
-		</div>
-		<formModel ref="newsFormModelRef"></formModel>
-    <!-- 添加 AI 助手组件 -->
+    <formModel ref="newsFormModelRef"></formModel>
+    <!-- Add AI Assistant Component -->
     <ChatAssistant />
-	</div>
+  </div>
 </template>
 
 

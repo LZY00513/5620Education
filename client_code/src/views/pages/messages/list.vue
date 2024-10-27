@@ -82,7 +82,7 @@
 	const context = getCurrentInstance()?.appContext.config.globalProperties;
 	//基础信息
 	const tableName = 'messages'
-	const formName = '留言板'
+	const formName = 'Message Board'
 	const router = useRouter()
 	const route = useRoute()
 	//基础信息

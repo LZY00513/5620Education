@@ -9,7 +9,7 @@ const config = {
 					icon: '',
 					child: [
 						{
-							name: 'Assignment Information',
+							name: 'Assignment',
 							url: '/index/zuoyexinxiList'
 						},
 					]
@@ -19,7 +19,7 @@ const config = {
 					icon: '',
 					child: [
 						{
-							name: 'Announcement Information',
+							name: 'Announcement',
 							url: '/index/newsList'
 						},
 					]
@@ -29,7 +29,7 @@ const config = {
 					icon: 'icon-common4',
 					child: [
 						{
-							name: 'Forum Communication',
+							name: 'Forum',
 							url: '/index/forumList'
 						},
 					]
@@ -39,7 +39,7 @@ const config = {
 					icon: '',
 					child: [
 						{
-							name: 'Message Board',
+							name: 'Message',
 							url: '/index/messagesList'
 						},
 					]
@@ -49,7 +49,7 @@ const config = {
 					icon: '',
 					child: [
 						{
-							name: 'Educational Resources',
+							name: 'Educational ',
 							url: '/index/jiaoxueziyuanList'
 						},
 					]

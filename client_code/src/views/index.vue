@@ -1,7 +1,7 @@
 <template>
 	<div class="home">
 		<div class="index_top">
-			<div class="index_top_title">在线学习教育平台</div>
+			<div class="index_top_title">Intelligent Education Application</div>
 			<div class="index_top_right">
 				<template v-if="Token">
 					<div v-if="date&&weather" class="weather_time_view">
@@ -18,7 +18,7 @@
 					</div>
 				</template>
 				<el-button v-if="!Token" type="success" icon="User" circle @click="loginClick">
-					登录
+					Login
 				</el-button>
 				<div class="user" v-if="Token">
 					<el-dropdown class="avatar-container" trigger="hover">
@@ -49,7 +49,7 @@
 					 class="menu_view" mode="horizontal" :ellipsis="false" @select="menuChange" :key="menuIndex">
 					<el-menu-item class="first-item" index="0" @click="menuHandler('/')">
 						<template #title>
-							<span>首页</span>
+							<span>Home</span>
 						</template>
 					</el-menu-item>
 
