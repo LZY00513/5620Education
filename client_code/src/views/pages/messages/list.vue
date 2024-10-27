@@ -28,6 +28,7 @@
 						v-if="messageShowIndex==index&&item.userid==userid">删除</div>
 				</div>
 				<el-divider v-if="index!=list.length - 1" />
+        <ChatAssistant />
 			</div>
 		</div>
 		<el-pagination
@@ -65,6 +66,7 @@
 </template>
 
 <script setup>
+  import ChatAssistant from '@/views/pages/ChatAssistant.vue';
 	import {
 		ref,
 		nextTick,

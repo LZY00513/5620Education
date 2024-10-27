@@ -49,6 +49,7 @@ import jiaoshikongbaiyemianAdd from '@/views/pages/jiaoshikongbaiyemian/formAdd'
 import jiazhangkongbaiyemianList from '@/views/pages/jiazhangkongbaiyemian/list'
 import jiazhangkongbaiyemianDetail from '@/views/pages/jiazhangkongbaiyemian/formModel'
 import jiazhangkongbaiyemianAdd from '@/views/pages/jiazhangkongbaiyemian/formAdd'
+import ChatAssistant from '@/views/pages/ChatAssistant.vue';
 
 const routes = [{
 		path: '/',
@@ -64,7 +65,11 @@ const routes = [{
 		, {
 			path: 'jiaoshiList',
 			component: jiaoshiList
-		}, {
+		},	{
+				path: 'showChat',
+
+				component: ChatAssistant
+			}, {
 			path: 'jiaoshiDetail',
 			component: jiaoshiDetail
 		}, {
@@ -214,7 +219,13 @@ const routes = [{
 		}, {
 			path: 'jiazhangkongbaiyemianAdd',
 			component: jiazhangkongbaiyemianAdd
-		}
+		},{
+				path: '/chat',
+				name: 'ChatAssistant',
+				component: ChatAssistant,
+			},
+
+
 		]
 	},
 	{
@@ -228,7 +239,8 @@ const routes = [{
 	,{
 		path: '/jiazhangRegister',
 		component: jiazhangRegister
-	}
+	},
+
 ]
 
 const router = createRouter({

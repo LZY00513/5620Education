@@ -52,7 +52,18 @@
 							<span>首页</span>
 						</template>
 					</el-menu-item>
-					<template v-for="(menu,index) in menuList" :key="menu.menu">
+
+
+          <!-- <el-menu-item @click="goToChat" index="chat">
+             Chat
+           </el-menu-item> -->
+          <div v-if="showChat">
+            <ChatAssistant />
+          </div>
+
+
+
+          <template v-for="(menu,index) in menuList" :key="menu.menu">
 						<el-sub-menu v-if="menu.child.length>1" :index="index+2+''" class="first-item">
 							<template #title>
 								<span>{{ menu.name }}</span>
@@ -130,6 +141,42 @@
 			weather.value = res.data
 		})
 	}
+/*
+const goToChat = () => {
+  router.push('/chat-assistant');
+};
+
+const sendMessage = async () => {
+  if (userInput.value.trim() === '') return;
+
+  // 添加用户消息到聊天记录
+  chatHistory.value.push({ sender: 'user', content: userInput.value });
+
+  // 调用后端 API 获取 AI 回复
+  try {
+    const response = await axios.post('https://zzzzapi.com/v1/ai/chat', {
+      message: userInput.value,
+    }, {
+      headers: {
+        'Authorization': 'Bearer sk-q9f1xoMC3y2Up7WkZC7H9k3OAEHCZ6ez08qWbNmz5BDIfR79'
+      }
+    });
+
+    // 添加 AI 回复到聊天记录
+    chatHistory.value.push({ sender: 'ai', content: response.data });
+  } catch (error) {
+    console.error('Error fetching AI response:', error);
+  }
+
+  // 清空输入框
+  userInput.value = '';
+const showChat = ref(false);
+
+const toggleChat = () => {
+  showChat.value = !showChat.value;
+};
+*/
+
 	onBeforeUnmount(() => {
 		clearInterval(interval.value)
 	})
@@ -778,4 +825,67 @@
     display: inline-block;
 }
 
+<style scoped>
+ .ai-chat {
+   display: flex;
+   flex-direction: column;
+   max-width: 600px;
+   margin: 0 auto;
+   padding: 20px;
+   border: 1px solid #ddd;
+   border-radius: 10px;
+   background-color: #f9f9f9;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+ }
+
+.chat-history {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.user {
+  text-align: right;
+  color: #007bff;
+  margin: 10px 0;
+}
+
+.ai {
+  text-align: left;
+  color: #28a745;
+  margin: 10px 0;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
 </style>

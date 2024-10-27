@@ -70,6 +70,17 @@ const config = {
 						},
 					]
 				},
+				{
+					name: 'Chat',
+					icon: '',
+					child: [
+						{
+							name: 'Chat',
+							url: '/index/showChat',
+							 // 使用自定义事件或方法代替 `url`
+						}
+					]
+				}
 			]
         }
     },

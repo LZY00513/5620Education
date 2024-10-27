@@ -119,16 +119,20 @@
 				        </li>
 				         </ul> 
 				    </div>
-				
+
 				<div class="nmore" @click="moreClick('news')" style="cursor: pointer">查看更多 +</div>
 			</div>
 
 		</div>
 		<formModel ref="newsFormModelRef"></formModel>
+    <!-- 添加 AI 助手组件 -->
+    <ChatAssistant />
 	</div>
 </template>
 
 <script setup>
+import ChatAssistant from '@/views/pages/ChatAssistant.vue';
+
 	import {
 		ref,
 		getCurrentInstance
@@ -265,7 +269,8 @@
 		//公告信息
 		getNewsList()
 	}
-	init()
+
+  init()
 </script>
 
 <style lang="scss">
@@ -622,6 +627,9 @@
     clear:both;
     text-align:center;
     order:22;
+}
+.ai-chat {
+  margin-top: 20px; /* 增加组件顶部的间距，使其与上方内容隔开 */
 }
 
 /* 总盒子 */
