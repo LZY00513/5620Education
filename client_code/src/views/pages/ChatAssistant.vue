@@ -56,8 +56,8 @@ onMounted(() => {
   sendRandomMessage();
 });
 
-const API_KEY = 'sk-q9f1xoMC3y2Up7WkZC7H9k3OAEHCZ6ez08qWbNmz5BDIfR79'; // Replace with your actual API key
-const API_URL = 'https://zzzzapi.com/v1/chat/completions'; // Updated API endpoint
+const API_KEY = 'Replace with your actual API key'; // 
+const API_URL = 'https://zzzzapi.com/v1/chat/completions'; // 
 
 const sendMessage = async () => {
   if (userInput.value.trim() === '') return;
